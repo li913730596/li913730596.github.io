@@ -74,13 +74,38 @@
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/03/JdbcTemplate/">JdbcTemplate</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="JdbcTemplate"><a href="#JdbcTemplate" class="headerlink" title="JdbcTemplate"></a>JdbcTemplate</h1><p>作为spring基础的事务开发管理框架，是有必要学习的</p>
+<p>1.引入依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>​    JdbcTemplate封装了许多SQL操作，具体可查阅官方文档<a target="_blank" rel="noopener" href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html%E3%80%82">https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/jdbc/core/JdbcTemplate.html。</a></p>
+<p>2.创建方法进行操作</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 配置数据源</span></span><br><span class="line">yml文件配置jdbc</span><br><span class="line"><span class="comment">// 2. 创建JdbcTemplate对象</span></span><br><span class="line"><span class="meta">@Autowired</span></span><br><span class="line"><span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 编写SQL查询语句</span></span><br><span class="line"><span class="keyword">public</span> Fruit <span class="title function_">queryByFid</span><span class="params">(Integer fid)</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from t_fruit where fid = ?&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 调用JdbcTemplate的查询方法</span></span><br><span class="line">        List&lt;Fruit&gt; query = jdbcTemplate.query(sql, <span class="keyword">new</span> <span class="title class_">Object</span>[]&#123;fid&#125;, <span class="keyword">new</span> <span class="title class_">int</span>[]&#123;Types.INTEGER&#125;, <span class="keyword">new</span> <span class="title class_">FruitMap</span>());</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. 处理查询结果</span></span><br><span class="line">        <span class="keyword">if</span>(query != <span class="literal">null</span> &amp;&amp; query.size() &gt; <span class="number">0</span>) <span class="keyword">return</span> query.get(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>需要注意的是第4步的实体类型映射  FruitMapper()   (<strong>将所查询到的数据与实体类型进行匹配)</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitMap</span> <span class="keyword">implements</span> <span class="title class_">RowMapper</span>&lt;Fruit&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Fruit <span class="title function_">mapRow</span><span class="params">(ResultSet rs, <span class="type">int</span> rowNum)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">Fruit</span> <span class="variable">fruit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Fruit</span>();</span><br><span class="line">        fruit.setFid(Integer.parseInt( rs.getString(<span class="string">&quot;fid&quot;</span>)));</span><br><span class="line">        fruit.setCount(Integer.parseInt(rs.getString(<span class="string">&quot;fcount&quot;</span>)));</span><br><span class="line">        fruit.setFname(rs.getString(<span class="string">&quot;fname&quot;</span>));</span><br><span class="line">        fruit.setPrice(Integer.parseInt(rs.getString(<span class="string">&quot;price&quot;</span>)));</span><br><span class="line">        fruit.setRemark(rs.getString(<span class="string">&quot;remark&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> fruit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg0jwlpz0002pku851e38afy" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg0mk92g0000g0u89nju315h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -151,7 +176,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg0jwlq00003pku8aj93an9t" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg0mk92o0003g0u8d60q902i" class="article-share-link">Share</a>
       
       
     </footer>
@@ -224,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/second/" data-id="clg0jwlq10004pku8c6lw3di6" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/second/" data-id="clg0mk92p0004g0u8h3g042fs" class="article-share-link">Share</a>
       
       
     </footer>
@@ -287,7 +312,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/first/" data-id="clg0jwlpy0001pku8301tdkne" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/first/" data-id="clg0mk92l0002g0u81biq7pd2" class="article-share-link">Share</a>
       
       
     </footer>
@@ -339,7 +364,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg0jwlpp0000pku8bdgscjvo" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg0mk92k0001g0u87dij70r1" class="article-share-link">Share</a>
       
       
     </footer>
@@ -380,7 +405,7 @@
       <ul>
         
           <li>
-            <a href="/2023/04/03/JdbcTemplate/">(no title)</a>
+            <a href="/2023/04/03/JdbcTemplate/">JdbcTemplate</a>
           </li>
         
           <li>
