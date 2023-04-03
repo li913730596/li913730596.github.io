@@ -15,7 +15,7 @@
 <meta property="og:description" content="ctrl h  打开继承树ctrl f12  或者 alt 7打开所有方法自动装配1.容器功能组件添加1.@configuration   分为两种模式：Full 、Lite , 分别对应proxyBeanMethods &#x3D; true;  proxyBeanMetohds &#x3D; false; 12Full模式下 单例组件  返回的都是同一个对象  proxyBeanMethods &#x3D; true (默">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-03T09:41:51.055Z">
-<meta property="article:modified_time" content="2023-04-03T09:42:17.411Z">
+<meta property="article:modified_time" content="2023-04-03T10:28:56.960Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -135,12 +135,17 @@
 
 
 
+<h4 id="Bean"><a href="#Bean" class="headerlink" title="@Bean"></a>@Bean</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AppConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MyService <span class="title function_">myService</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">MyServiceImpl</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>在上面的代码中，<code>@Bean</code> 注解标记的 <code>myService()</code> 方法返回一个 <code>MyService</code> 接口的实现类对象。在运行时，Spring会自动调用该方法并将返回的对象注册为容器中的Bean。这意味着我们可以在应用程序中通过Spring容器获取 <code>MyService</code> 实例，而无需自己实例化该对象。</p>
+<hr>
 <h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>yml</p>
 <h1 id="Web开发"><a href="#Web开发" class="headerlink" title="Web开发"></a>Web开发</h1>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg0n7qfz0002asu83ize3awk" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg0pag6o0001cou88kk2bh0n" class="article-share-link">Share</a>
       
       
     </footer>
