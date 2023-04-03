@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>MyBatis | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SpringBoot 中Mybatis的使用1.引入依赖 123456&lt;dependency&gt;	&lt;groupId&gt;org.mybatis.spring.boot&lt;&#x2F;groupId&gt;	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;&#x2F;artifactId&gt;	&lt;version&gt;2.0.0&lt;&#x2F;v">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MyBatis">
+<meta property="og:url" content="http://example.com/2023/04/03/mybatis/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="SpringBoot 中Mybatis的使用1.引入依赖 123456&lt;dependency&gt;	&lt;groupId&gt;org.mybatis.spring.boot&lt;&#x2F;groupId&gt;	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;&#x2F;artifactId&gt;	&lt;version&gt;2.0.0&lt;&#x2F;v">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/642a7ca2a682492fcc19676c.png">
+<meta property="article:published_time" content="2023-04-03T06:50:55.537Z">
+<meta property="article:modified_time" content="2023-04-03T08:08:54.990Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/642a7ca2a682492fcc19676c.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-mybatis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/mybatis/" class="article-date">
+  <time datetime="2023-04-03T06:50:55.537Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MyBatis
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringBoot-中Mybatis的使用"><a href="#SpringBoot-中Mybatis的使用" class="headerlink" title="SpringBoot 中Mybatis的使用"></a>SpringBoot 中Mybatis的使用</h1><p>1.引入依赖</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">2.0</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2.进行相关配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">jdbc:mysql:///fruitdb</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
+
+<p>3.相关操作</p>
+<p>创建一个Mapper接口类， 并在该类上面加上@Mapper注解</p>
+<p>然后进行sql方法的书写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Mapper</span><br><span class="line">public interface FruitMapper &#123;</span><br><span class="line"></span><br><span class="line">    @Select(&quot;select * from t_fruit&quot;)</span><br><span class="line">    List&lt;Fruit&gt; getAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里由于我的实体类中的属性何数据库中命名一致，所以就没有用到**@Result**</p>
+<hr>
+<p>@Select 是查询类的注解，所有的查询均使用这个<br>@Result 修饰返回的结果集，关联实体类属性和数据库字段一一对应，如果实体类属性和数据库属性名保持一致，就不需要这个属性来修饰。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Results(&#123;</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;userSex&quot;,  column = &quot;user_sex&quot;, javaType = UserSexEnum.class),</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;nickName&quot;, column = &quot;nick_name&quot;)</span></span><br><span class="line"><span class="meta">		&#125;)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>@Insert 插入数据库使用，直接传入实体类会自动解析属性到对应的值<br>@Update 负责修改，也可以直接传入对象<br>@delete 负责删除</p>
+<p><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/java-api.html">了解更多属性参考这里</a></p>
+<hr>
+<p>进行检验：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FruitMapper fruitMapper;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/fruit&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fruitMapper.getAll().toString();</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终返回结果为：</p>
+<p><img src="https://pic.imgdb.cn/item/642a7ca2a682492fcc19676c.png" alt="image-20230403150912425"></p>
+<ul>
+<li>需要注意：</li>
+</ul>
+<hr>
+<p>使用符号# 传入的参数在SQL中显示为字符串 （会自动加上””)， $ 传入的参数就是传入的值本身</p>
+<p>所以使用#能够在很大程度上<strong>防止sql注入</strong>， $ 则<strong>无法防止sql注入</strong>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg0jwlq00003pku8aj93an9t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/04/03/JdbcTemplate/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/04/03/second/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">SecondDay</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/03/JdbcTemplate/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/03/mybatis/">MyBatis</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/03/second/">SecondDay</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/02/first/">FirstDay</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/02/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>

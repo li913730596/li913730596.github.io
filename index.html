@@ -64,6 +64,176 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-JdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/JdbcTemplate/" class="article-date">
+  <time datetime="2023-04-03T08:09:45.135Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg0jwlpz0002pku851e38afy" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-mybatis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/mybatis/" class="article-date">
+  <time datetime="2023-04-03T06:50:55.537Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/03/mybatis/">MyBatis</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringBoot-中Mybatis的使用"><a href="#SpringBoot-中Mybatis的使用" class="headerlink" title="SpringBoot 中Mybatis的使用"></a>SpringBoot 中Mybatis的使用</h1><p>1.引入依赖</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">2.0</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2.进行相关配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">jdbc:mysql:///fruitdb</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
+
+<p>3.相关操作</p>
+<p>创建一个Mapper接口类， 并在该类上面加上@Mapper注解</p>
+<p>然后进行sql方法的书写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Mapper</span><br><span class="line">public interface FruitMapper &#123;</span><br><span class="line"></span><br><span class="line">    @Select(&quot;select * from t_fruit&quot;)</span><br><span class="line">    List&lt;Fruit&gt; getAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里由于我的实体类中的属性何数据库中命名一致，所以就没有用到**@Result**</p>
+<hr>
+<p>@Select 是查询类的注解，所有的查询均使用这个<br>@Result 修饰返回的结果集，关联实体类属性和数据库字段一一对应，如果实体类属性和数据库属性名保持一致，就不需要这个属性来修饰。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Results(&#123;</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;userSex&quot;,  column = &quot;user_sex&quot;, javaType = UserSexEnum.class),</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;nickName&quot;, column = &quot;nick_name&quot;)</span></span><br><span class="line"><span class="meta">		&#125;)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>@Insert 插入数据库使用，直接传入实体类会自动解析属性到对应的值<br>@Update 负责修改，也可以直接传入对象<br>@delete 负责删除</p>
+<p><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/java-api.html">了解更多属性参考这里</a></p>
+<hr>
+<p>进行检验：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FruitMapper fruitMapper;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/fruit&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fruitMapper.getAll().toString();</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终返回结果为：</p>
+<p><img src="https://pic.imgdb.cn/item/642a7ca2a682492fcc19676c.png" alt="image-20230403150912425"></p>
+<ul>
+<li>需要注意：</li>
+</ul>
+<hr>
+<p>使用符号# 传入的参数在SQL中显示为字符串 （会自动加上””)， $ 传入的参数就是传入的值本身</p>
+<p>所以使用#能够在很大程度上<strong>防止sql注入</strong>， $ 则<strong>无法防止sql注入</strong>。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg0jwlq00003pku8aj93an9t" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-second" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/second/" class="article-date">
+  <time datetime="2023-04-03T05:19:05.404Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/03/second/">SecondDay</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>多环境配置Profile </p>
+<p>Profile用来针对不同的环境下使用不同的配置文件，多环境配置文件必须以<code>application-&#123;profile&#125;.properties</code>的格式命，其中<code>&#123;profile&#125;</code>为环境标识。比如定义两个配置文件：</p>
+<ul>
+<li>application-dev.yml:开发环境</li>
+</ul>
+<hr>
+<p>server:</p>
+<p>​    port: 8080</p>
+<hr>
+<ul>
+<li>application-pord.yml:生产环境</li>
+</ul>
+<hr>
+<p>server:</p>
+<p>​    port: 8081</p>
+<hr>
+</li>
+</ul>
+<p>需要切换时就可以直接在<code>application.yml</code>中使用:</p>
+<hr>
+<p>spring:</p>
+<p>​    profiles:</p>
+<p>​            active: dev/prod</p>
+<hr>
+<p>进行切换</p>
+<ul>
+<li>在不得不使用xml配置文件的时候：<ul>
+<li>在入口类里通过注解<code>@ImportResource(&#123;&quot;classpath:some-application.xml&quot;&#125;)</code>来引入xml配置文件。</li>
+</ul>
+</li>
+</ul>
+<h2 id="使用Druid连接池"><a href="#使用Druid连接池" class="headerlink" title="使用Druid连接池"></a>使用Druid连接池</h2><p>​    </p>
+<ul>
+<li>这里出现了问题，当我们没有引入<code>spring-boot-starter-web</code>的时候是不会一直处于启动状态的</li>
+<li>当我们引入了Mybatis  或者  Druid的时候必须要进行数据库的设置，否则会报错</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/second/" data-id="clg0jwlq10004pku8c6lw3di6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-first" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/02/first/" class="article-date">
@@ -117,7 +287,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/first/" data-id="clg0dr83u000014u88qgqfyfx" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/first/" data-id="clg0jwlpy0001pku8301tdkne" class="article-share-link">Share</a>
       
       
     </footer>
@@ -169,7 +339,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg0dr83y000114u8elcce7pv" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg0jwlpp0000pku8bdgscjvo" class="article-share-link">Share</a>
       
       
     </footer>
@@ -208,6 +378,18 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/04/03/JdbcTemplate/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/03/mybatis/">MyBatis</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/03/second/">SecondDay</a>
+          </li>
         
           <li>
             <a href="/2023/04/02/first/">FirstDay</a>
