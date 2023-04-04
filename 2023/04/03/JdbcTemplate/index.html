@@ -15,7 +15,7 @@
 <meta property="og:description" content="JdbcTemplate作为spring基础的事务开发管理框架，是有必要学习的 1.引入依赖 1234&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt;&lt;&#x2F;de">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-03T08:09:45.135Z">
-<meta property="article:modified_time" content="2023-04-03T09:41:56.201Z">
+<meta property="article:modified_time" content="2023-04-04T09:17:16.104Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -103,11 +103,17 @@
 <p>需要注意的是第4步的实体类型映射  FruitMapper()   (<strong>将所查询到的数据与实体类型进行匹配)</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitMap</span> <span class="keyword">implements</span> <span class="title class_">RowMapper</span>&lt;Fruit&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Fruit <span class="title function_">mapRow</span><span class="params">(ResultSet rs, <span class="type">int</span> rowNum)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">Fruit</span> <span class="variable">fruit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Fruit</span>();</span><br><span class="line">        fruit.setFid(Integer.parseInt( rs.getString(<span class="string">&quot;fid&quot;</span>)));</span><br><span class="line">        fruit.setCount(Integer.parseInt(rs.getString(<span class="string">&quot;fcount&quot;</span>)));</span><br><span class="line">        fruit.setFname(rs.getString(<span class="string">&quot;fname&quot;</span>));</span><br><span class="line">        fruit.setPrice(Integer.parseInt(rs.getString(<span class="string">&quot;price&quot;</span>)));</span><br><span class="line">        fruit.setRemark(rs.getString(<span class="string">&quot;remark&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> fruit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<hr>
+<h3 id="JdbcTemplate-配置多数据源"><a href="#JdbcTemplate-配置多数据源" class="headerlink" title="JdbcTemplate 配置多数据源"></a>JdbcTemplate 配置多数据源</h3><p>其实就是从第一步开始 分成两份代码，分别处理不同的数据源（数据库）</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class DataSourceConfig &#123;</span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;mysqldatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.mysql&quot;)</span><br><span class="line">    public DataSource dataSourceOne()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracledatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.oracle&quot;)</span><br><span class="line">    public DataSource dataSourceTwo()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;mysqlJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate primaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;mysqldatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracleJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate secondaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;oracledatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>详细测试可参考：<a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html">https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg1yyda10000i8u84hwt9dur" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg2bhd8k00011gu875qg0b23" class="article-share-link">Share</a>
       
       
     </footer>
@@ -165,6 +171,10 @@
       <ul>
         
           <li>
+            <a href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
           </li>
         
@@ -178,10 +188,6 @@
         
           <li>
             <a href="/2023/04/03/JdbcTemplate/">JdbcTemplate</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/03/mybatis/">MyBatis</a>
           </li>
         
       </ul>

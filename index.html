@@ -64,6 +64,81 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-AopLog" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/04/AopLog/" class="article-date">
+  <time datetime="2023-04-04T12:58:13.598Z" itemprop="datePublished">2023-04-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>引入依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-aop<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>首先创建日志结构，包括数据库表和实体类</li>
+<li>然后用JdbcTemplate或者Mybatis等来实现持久层的功能。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public interface LogMapper &#123;</span><br><span class="line">    void insertLog(SysLog log);</span><br><span class="line"></span><br><span class="line">    List&lt;Map&lt;String , Object&gt;&gt; getAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">@Repository</span><br><span class="line">public class LogMapperImpl implements LogMapper &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private JdbcTemplate jdbcTemplate;</span><br><span class="line">    @Override</span><br><span class="line">    public void insertLog(SysLog log) &#123;</span><br><span class="line">        StringBuffer sql = new StringBuffer(&quot;insert into log&quot;);</span><br><span class="line">        sql.append(&quot;(username,operation,time,method,params,ip,createTime) &quot;);</span><br><span class="line">		sql.append(&quot;values(:username,:operation,:time,:method,&quot;);</span><br><span class="line">		sql.append(&quot;:params,:ip,:createTime)&quot;);</span><br><span class="line"></span><br><span class="line">        NamedParameterJdbcTemplate npjt = new NamedParameterJdbcTemplate(jdbcTemplate.getDataSource());</span><br><span class="line">        npjt.update(sql.toString(), new BeanPropertySqlParameterSource(log));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Log(&quot;第二个方法，用来查询&quot;)</span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;Map&lt;String, Object&gt;&gt; getAll() &#123;</span><br><span class="line">        return jdbcTemplate.queryForList(&quot;select * from t_book&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@RestController</span><br><span class="line">public class TestController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private LogMapperImpl logMapper;</span><br><span class="line"></span><br><span class="line">    @Log(&quot;第一个方法&quot;)</span><br><span class="line">    @RequestMapping(&quot;/one&quot;)</span><br><span class="line">    public void first()&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">	@Log(&quot;第二个方法，用来查询&quot;)</span><br><span class="line">    @RequestMapping(&quot;/two&quot;)</span><br><span class="line">    public List&lt;Map&lt;String , Object&gt;&gt; getAll()&#123;</span><br><span class="line">        return logMapper.getAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>这里使用一个注解来作为切入点</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.METHOD)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Log &#123;</span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后将创建我们的切面类</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line">@Aspect</span><br><span class="line">@Component</span><br><span class="line">public class LogAspect &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    private LogMapper logMapper;</span><br><span class="line"></span><br><span class="line">    @Pointcut(&quot;@annotation(com.example.annotation.Log)&quot;)</span><br><span class="line">    public void pointCut()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    @Around(&quot;pointCut()&quot;)</span><br><span class="line">    public Object around(ProceedingJoinPoint proceedingJoinPoint)&#123;</span><br><span class="line">        Object result = null;</span><br><span class="line">        long beginTime  = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            result = proceedingJoinPoint.proceed();</span><br><span class="line">        &#125; catch (Throwable e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        long time = System.currentTimeMillis() - beginTime;</span><br><span class="line">        saveLog(proceedingJoinPoint,time);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void saveLog(ProceedingJoinPoint joinPoint, long time)&#123;</span><br><span class="line">        MethodSignature signature = (MethodSignature) joinPoint.getSignature();</span><br><span class="line">        Method method = signature.getMethod();</span><br><span class="line">        SysLog sysLog = new SysLog();</span><br><span class="line">        Log logAnnotation = method.getAnnotation(Log.class);</span><br><span class="line">        if (logAnnotation != null) &#123;</span><br><span class="line">            // 注解上的描述</span><br><span class="line">            sysLog.setOperation(logAnnotation.value());</span><br><span class="line">        &#125;</span><br><span class="line">        // 请求的方法名</span><br><span class="line">        String className = joinPoint.getTarget().getClass().getName();</span><br><span class="line">        String methodName = signature.getName();</span><br><span class="line">        sysLog.setMethod(className + &quot;.&quot; + methodName + &quot;()&quot;);</span><br><span class="line">        // 请求的方法参数值</span><br><span class="line">        Object[] args = joinPoint.getArgs();</span><br><span class="line">        // 请求的方法参数名称</span><br><span class="line">        LocalVariableTableParameterNameDiscoverer u = new LocalVariableTableParameterNameDiscoverer();</span><br><span class="line">        String[] paramNames = u.getParameterNames(method);</span><br><span class="line">        if (args != null &amp;&amp; paramNames != null) &#123;</span><br><span class="line">            String params = &quot;&quot;;</span><br><span class="line">            for (int i = 0; i &lt; args.length; i++) &#123;</span><br><span class="line">                params += &quot;  &quot; + paramNames[i] + &quot;: &quot; + args[i];</span><br><span class="line">            &#125;</span><br><span class="line">            sysLog.setParams(params);</span><br><span class="line">        &#125;</span><br><span class="line">        // 获取request</span><br><span class="line">        HttpServletRequest request = HttpContextUtils.getHttpServletRequest();</span><br><span class="line">        // 设置IP地址</span><br><span class="line">        sysLog.setIp(IPUtils.getIpAddr(request));</span><br><span class="line">        // 模拟一个用户名</span><br><span class="line">        sysLog.setUsername(&quot;mrbird&quot;);</span><br><span class="line">        sysLog.setTime((int) time);</span><br><span class="line">        sysLog.setCreateTime(new Date());</span><br><span class="line">        // 保存系统日志</span><br><span class="line">        logMapper.insertLog(sysLog);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<blockquote>
+<p>​    这里需要注意<code>@Pointcut(&quot;@annotation(com.example.annotation.Log)&quot;)</code>将我们自定义的注解作为一个重用的<strong>切入点（日志要发挥作用的地方）</strong>的声明；</p>
+<pre><code> 这样我们可以直接在后面需要切入（记录日志）的地方，就会执行该切入点的**通知方法（就是日志的相关操作）**，例如本例中的```@Around(&quot;pointCut()&quot;)```的环绕通知，就是指将该**通知的内容作用到对应的切入点**。
+</code></pre>
+</blockquote>
+<hr>
+<blockquote>
+<p>换句话说就是，@PointCut()  指向了一个地方，  然后在切面类中  也会有一些方法与  @PointCut()切入点  相对应（前置  后置  返回  异常 环绕等通知），然后， 当我们程序中出现了@PointCut()  对应的部分，就会执行相对应的方法（通知）。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/04/AopLog/" data-id="clg2bhd8f00001gu83dfq8qdp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Paper/SDNLearn" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/04/Paper/SDNLearn/" class="article-date">
@@ -114,11 +189,14 @@
 <p>而SDN网络由于本来就是控制器集中管理，所以很容易得到网络的全局视图。但这些信息也会很容易被攻击者获取到。</p>
 </li>
 </ul>
+<h3 id="OpenFlow协议安全性"><a href="#OpenFlow协议安全性" class="headerlink" title="OpenFlow协议安全性"></a>OpenFlow协议安全性</h3><blockquote>
+<p>依据 OpenFlow 协议,控制器和交换机之间通过安全通道进行连接,安全通道采用安全传输 层协议 TLS 对消息进行加密和认证</p>
+</blockquote>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/Paper/SDNLearn/" data-id="clg1yyda90006i8u8bpnsdxnh" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/Paper/SDNLearn/" data-id="clg2bhd8o00081gu85ra6d1ge" class="article-share-link">Share</a>
       
       
     </footer>
@@ -155,7 +233,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/jdbc/" data-id="clg1yyda80004i8u85zqqd9cy" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/jdbc/" data-id="clg2bhd8n00051gu8b7pd8598" class="article-share-link">Share</a>
       
       
     </footer>
@@ -244,7 +322,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg1yyda60001i8u86erjctbb" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg2bhd8l00021gu80suhev76" class="article-share-link">Share</a>
       
       
     </footer>
@@ -291,11 +369,17 @@
 <p>需要注意的是第4步的实体类型映射  FruitMapper()   (<strong>将所查询到的数据与实体类型进行匹配)</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitMap</span> <span class="keyword">implements</span> <span class="title class_">RowMapper</span>&lt;Fruit&gt; &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Fruit <span class="title function_">mapRow</span><span class="params">(ResultSet rs, <span class="type">int</span> rowNum)</span> <span class="keyword">throws</span> SQLException &#123;</span><br><span class="line">        <span class="type">Fruit</span> <span class="variable">fruit</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Fruit</span>();</span><br><span class="line">        fruit.setFid(Integer.parseInt( rs.getString(<span class="string">&quot;fid&quot;</span>)));</span><br><span class="line">        fruit.setCount(Integer.parseInt(rs.getString(<span class="string">&quot;fcount&quot;</span>)));</span><br><span class="line">        fruit.setFname(rs.getString(<span class="string">&quot;fname&quot;</span>));</span><br><span class="line">        fruit.setPrice(Integer.parseInt(rs.getString(<span class="string">&quot;price&quot;</span>)));</span><br><span class="line">        fruit.setRemark(rs.getString(<span class="string">&quot;remark&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> fruit;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<hr>
+<h3 id="JdbcTemplate-配置多数据源"><a href="#JdbcTemplate-配置多数据源" class="headerlink" title="JdbcTemplate 配置多数据源"></a>JdbcTemplate 配置多数据源</h3><p>其实就是从第一步开始 分成两份代码，分别处理不同的数据源（数据库）</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class DataSourceConfig &#123;</span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;mysqldatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.mysql&quot;)</span><br><span class="line">    public DataSource dataSourceOne()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracledatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.oracle&quot;)</span><br><span class="line">    public DataSource dataSourceTwo()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;mysqlJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate primaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;mysqldatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracleJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate secondaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;oracledatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>详细测试可参考：<a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html">https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html</a></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg1yyda10000i8u84hwt9dur" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg2bhd8k00011gu875qg0b23" class="article-share-link">Share</a>
       
       
     </footer>
@@ -404,7 +488,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg1yydaa0007i8u8blltf24d" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg2bhd8o00071gu82ynxf3kv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -477,7 +561,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/second/" data-id="clg1yyda90005i8u80x8r2u60" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/second/" data-id="clg2bhd8n00061gu8h2eba3tc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -540,7 +624,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/first/" data-id="clg1yyda70002i8u85pkl6cea" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/first/" data-id="clg2bhd8m00031gu85f26augc" class="article-share-link">Share</a>
       
       
     </footer>
@@ -595,7 +679,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg1yyda80003i8u83xhyh7kh" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg2bhd8m00041gu88k9pdoz5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -636,6 +720,10 @@
       <ul>
         
           <li>
+            <a href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
           </li>
         
@@ -649,10 +737,6 @@
         
           <li>
             <a href="/2023/04/03/JdbcTemplate/">JdbcTemplate</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/03/mybatis/">MyBatis</a>
           </li>
         
       </ul>
