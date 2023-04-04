@@ -15,7 +15,7 @@
 <meta property="og:description" content="JdbcTemplate作为spring基础的事务开发管理框架，是有必要学习的 1.引入依赖 1234&lt;dependency&gt;    &lt;groupId&gt;org.springframework.boot&lt;&#x2F;groupId&gt;    &lt;artifactId&gt;spring-boot-starter-jdbc&lt;&#x2F;artifactId&gt;&lt;&#x2F;de">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-04-03T08:09:45.135Z">
-<meta property="article:modified_time" content="2023-04-04T13:56:53.129Z">
+<meta property="article:modified_time" content="2023-04-04T14:02:09.931Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -109,6 +109,13 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class DataSourceConfig &#123;</span><br><span class="line">    @Primary</span><br><span class="line">    @Bean(name = &quot;mysqldatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.mysql&quot;)</span><br><span class="line">    public DataSource dataSourceOne()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracledatasource&quot;)</span><br><span class="line">    @ConfigurationProperties(&quot;spring.datasource.druid.oracle&quot;)</span><br><span class="line">    public DataSource dataSourceTwo()&#123;</span><br><span class="line">        return DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;mysqlJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate primaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;mysqldatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    @Bean(name = &quot;oracleJdbcTemplate&quot;)</span><br><span class="line">    public JdbcTemplate secondaryJdbcTemplate(</span><br><span class="line">            @Qualifier(&quot;oracledatasource&quot;) DataSource dataSource) &#123;</span><br><span class="line">        return new JdbcTemplate(dataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>详细测试可参考：<a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html">https://mrbird.cc/Spring-Boot-JdbcTemplate%20Druid.html</a></p>
+<hr>
+<p>补充：</p>
+<ul>
+<li>使用JdbcTemplate 可以直接使用占位符来插入</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jdbcTemplate.update(<span class="string">&quot;insert into log(username) values(?)&quot;</span>, username);</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
