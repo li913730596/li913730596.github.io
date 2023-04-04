@@ -64,6 +64,70 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Paper/SDNLearn" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/04/Paper/SDNLearn/" class="article-date">
+  <time datetime="2023-04-04T07:18:58.285Z" itemprop="datePublished">2023-04-04</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p> 软件定义网络将传统，将传统封闭的网络体系解耦为数据平面、控制平面 和应用平面,在逻辑上实现了网络的集中控制与管理.SDN 的突出特点是开放性和可编程性</p>
+</blockquote>
+<ul>
+<li>于交换机会将无法匹配 的流请求信息均发送至控制器,由控制器为其提供相关的应答策略,这种工作模式极大地增加了控制器遭受 DoS/DDoS 攻击的可能性。</li>
+</ul>
+<h3 id="ONF-提出的-SDN-架构主要分为基础设施层、控制层和应用层"><a href="#ONF-提出的-SDN-架构主要分为基础设施层、控制层和应用层" class="headerlink" title="ONF 提出的 SDN 架构主要分为基础设施层、控制层和应用层"></a>ONF 提出的 SDN 架构主要分为基础设施层、控制层和应用层</h3><hr>
+<ul>
+<li>基础设施层由网络底层的转 发设备组成,主要负责数据的处理、转发和状态收集</li>
+<li>控制层集中维护网络状态,一方面,它通过自身与基础设施 层之间的接口获取底层基础设施信息,对数据平面的资源进行编排;另一方面,它对全网的拓扑和状态等信息进 行实时维护,并为应用层提供可扩展的编程接口</li>
+<li>应用层位于 SDN 架构的顶层,主要包括不同类型的业务和应用</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/642bd2cb6ea21b9a9ed978b6.png" alt="image-20230404153305515"></p>
+<h5 id="接口方面："><a href="#接口方面：" class="headerlink" title="接口方面："></a>接口方面：</h5><ul>
+<li>南向接口已有一些标准例如OpenFlow协议</li>
+<li>北向接口目前则没有统一的规范和标准</li>
+</ul>
+<h3 id="SDN安全模型和传统安全模型区别："><a href="#SDN安全模型和传统安全模型区别：" class="headerlink" title="SDN安全模型和传统安全模型区别："></a>SDN安全模型和传统安全模型区别：</h3><ul>
+<li>1.对信息流的控制方式不同</li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/642bd61a6ea21b9a9ee46966.png" alt="image-20230404154734215"></p>
+<p>​            由上图可以看出，传统网络的安全设备会放在关键路径上（必经之路），所有流入网络的流量都会被捕获到。而SDN模型则与控制器下发的流规则相关。右图部分的路径1与路径2都有可能经过，这时候就可能绕过安全设备。</p>
+<ul>
+<li><p>2.对网络的安全态势信息的获取方式不同。</p>
+<p>传统网络需要管理员发送广播，在收到每台机器的相应之后在做出安全评估。</p>
+<p>而SDN网络由于本来就是控制器集中管理，所以很容易得到网络的全局视图。但这些信息也会很容易被攻击者获取到。</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/04/Paper/SDNLearn/" data-id="clg1yyda90006i8u8bpnsdxnh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-jdbc" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/04/jdbc/" class="article-date">
@@ -91,7 +155,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/jdbc/" data-id="clg1upyl40002pgu83mmn530v" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/jdbc/" data-id="clg1yyda80004i8u85zqqd9cy" class="article-share-link">Share</a>
       
       
     </footer>
@@ -180,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg1upyl50003pgu8dh1b9hi9" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg1yyda60001i8u86erjctbb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -231,7 +295,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg1upykz0000pgu84v280780" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg1yyda10000i8u84hwt9dur" class="article-share-link">Share</a>
       
       
     </footer>
@@ -340,7 +404,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg1upyl50004pgu84kfzg7zn" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg1yydaa0007i8u8blltf24d" class="article-share-link">Share</a>
       
       
     </footer>
@@ -413,7 +477,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/second/" data-id="clg1upyl60005pgu818z55qwo" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/second/" data-id="clg1yyda90005i8u80x8r2u60" class="article-share-link">Share</a>
       
       
     </footer>
@@ -476,7 +540,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/first/" data-id="clg1upyl30001pgu8aeoq4s5f" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/first/" data-id="clg1yyda70002i8u85pkl6cea" class="article-share-link">Share</a>
       
       
     </footer>
@@ -531,7 +595,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg1upyl60006pgu8gdl70tuv" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg1yyda80003i8u83xhyh7kh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -572,6 +636,10 @@
       <ul>
         
           <li>
+            <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/04/jdbc/">Jdbc</a>
           </li>
         
@@ -585,10 +653,6 @@
         
           <li>
             <a href="/2023/04/03/mybatis/">MyBatis</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/03/second/">SecondDay</a>
           </li>
         
       </ul>
