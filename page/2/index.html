@@ -64,6 +64,69 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-1-10/first" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/02/1-10/first/" class="article-date">
+  <time datetime="2023-04-02T13:55:20.931Z" itemprop="datePublished">2023-04-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/02/1-10/first/">FirstDay</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="FirstDay"><a href="#FirstDay" class="headerlink" title="FirstDay:"></a>FirstDay:</h1><p>1.项目打包运行</p>
+<ul>
+<li><p>直接点击package就可以生成jar包</p>
+</li>
+<li><p>可以通过使用<code>java -jar test.jar</code> 的命令来对生成的jar包进行运行</p>
+</li>
+</ul>
+<p>2.springboot的配置</p>
+<ul>
+<li>启动图片可以在<code>src/main/resources</code>目录下的banner文件进行替换更改（最终显示的就是  banner中的内容）这个文件可以是图片也可以是文本。</li>
+</ul>
+<p>3.application.yml 为配置文件   </p>
+<ul>
+<li><p>配置文件可以用来进行属性的配置    </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">my.blog.name=jarninlee&#x27;s blog</span><br><span class="line">my.blog.title=Spring Boot</span><br></pre></td></tr></table></figure>
+
+<p>其中@Value(“${属性名}”)  就可以将配置文件中的值进行注入</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class BlogProperties &#123;</span><br><span class="line">	</span><br><span class="line">    @Value(&quot;$&#123;my.blog.name&#125;&quot;)</span><br><span class="line">    private String name;</span><br><span class="line">    </span><br><span class="line">    @Value(&quot;$&#123;my.blog.title&#125;&quot;)</span><br><span class="line">    private String title;</span><br><span class="line">    </span><br><span class="line">    // get,set略	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>由于上面已经被注册为Compent组件，所以可以直接进行该类的实例注入</p>
+<p>在属性很多的情况下，还可以使用另一种方式，直接指定一个配置文件中的参数然后自动按照变量名进行填充</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@ConfigurationProperties(prefix=&quot;my.blog&quot;)</span><br><span class="line">public class ConfigBean &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private String title;</span><br><span class="line">    // get,set略</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>需要注意的是使用这种方式，有两种情况：</strong></p>
+<p>​                -直接在Bean类上面添加<code>@Component</code>直接将其注册为bean组件</p>
+<p>​                -或者在SpringBoot启动类上面添加<code>@EnableConfigurationProperties( &#123;ConfigBean.class&#125; )</code></p>
+<p><strong>这两种都可将ConfigBean注册为Bean类型组件</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/02/1-10/first/" data-id="clg57xboj0004w8u83jli1fur" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/02/hello-world/" class="article-date">
@@ -155,23 +218,23 @@
       <ul>
         
           <li>
+            <a href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/06/Paper/BlockChain/">区块链</a>
           </li>
         
           <li>
-            <a href="/2023/04/05/cache/">使用缓存</a>
+            <a href="/2023/04/05/1-10/cache/">使用缓存</a>
           </li>
         
           <li>
-            <a href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+            <a href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
           </li>
         
           <li>
             <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/04/jdbc/">Jdbc</a>
           </li>
         
       </ul>

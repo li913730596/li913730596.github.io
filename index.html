@@ -64,6 +64,115 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-11-20/Json" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/06/11-20/Json/" class="article-date">
+  <time datetime="2023-04-06T11:17:50.147Z" itemprop="datePublished">2023-04-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>首先验证一下 @RequestBody  注解返回的是Json元素</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">getUser</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUserName(<span class="string">&quot;123&quot;</span>);</span><br><span class="line">        user.setAge(<span class="number">11</span>);</span><br><span class="line">        user.setBirthday(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">6222176558369919436L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>最终结果为：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;userName&quot;: &quot;123&quot;,</span><br><span class="line">    &quot;age&quot;: 11,</span><br><span class="line">    &quot;password&quot;: null,</span><br><span class="line">    &quot;birthday&quot;: &quot;2023-04-06T11:23:54.701+00:00&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们还可以自己改变输出时间的格式，通过创造一个配置类来设置时间属性：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JacksonConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> ObjectMapper <span class="title function_">getObjectMapper</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">        objectMapper.setDateFormat(<span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> objectMapper;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以得到结果：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;userName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">11</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;birthday&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-04-06 19:29:43&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><ul>
+<li>Jackson通过使用mapper的<code>writeValueAsString</code>方法将Java对象序列化为JSON格式字符串：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ObjectMapper objectMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/serialization&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">serialization</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">            user.setUserName(<span class="string">&quot;Jar&quot;</span>);</span><br><span class="line">            user.setBirthday(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> objectMapper.writeValueAsString(user);</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JsonProcessingException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;userName&quot;:&quot;Jar&quot;,&quot;age&quot;:0,&quot;password&quot;:null,&quot;birthday&quot;:&quot;2023-04-06 19:34:14&quot;&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><ul>
+<li>使用<code>@ResponseBody</code>注解可以使对象序列化为JSON格式字符串，除此之外，Jackson也提供了反序列化方法。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/readjsonstring&quot;)</span><br><span class="line">    public String readJsonString() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String json = &quot;&#123;\&quot;name\&quot;:\&quot;Jar\&quot;,\&quot;age\&quot;:26&#125;&quot;;</span><br><span class="line">            JsonNode node = objectMapper.readTree(json);</span><br><span class="line">            String name = node.get(&quot;name&quot;).asText();</span><br><span class="line">            int age = node.get(&quot;age&quot;).asInt();</span><br><span class="line">            return name + &quot; &quot; + age;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jar 26</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<ul>
+<li><code>readTree</code>方法可以接受一个字符串或者字节数组、文件、InputStream等， 返回JsonNode作为根节点，你可以像操作XML DOM那样操作遍历JsonNode以获取数据。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private ObjectMapper mapper;</span><br><span class="line"></span><br><span class="line">   @Test</span><br><span class="line">   void contextLoads() &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">       </span><br><span class="line">           String json = &quot;&#123;\&quot;name\&quot;:\&quot;mrbird\&quot;,\&quot;hobby\&quot;:&#123;\&quot;first\&quot;:\&quot;sleep\&quot;,\&quot;second\&quot;:\&quot;eat\&quot;&#125;&#125;&quot;;;</span><br><span class="line">           JsonNode node = null;</span><br><span class="line">           node = mapper.readTree(json);</span><br><span class="line">           JsonNode hobby = node.get(&quot;hobby&quot;);</span><br><span class="line">           String first = hobby.get(&quot;first&quot;).asText();</span><br><span class="line">           System.out.println(first);    							//   结果为：sleep</span><br><span class="line">           </span><br><span class="line">       &#125; catch (JsonProcessingException e) &#123;</span><br><span class="line">           throw new RuntimeException(e);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="绑定对象"><a href="#绑定对象" class="headerlink" title="绑定对象"></a>绑定对象</h3><p>将Java实体对象与Json对象绑定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/readjsonasobject&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">readJsonAsObject</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;Jar\&quot;,\&quot;age\&quot;:26&#125;&quot;</span>;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> objectMapper.readValue(json, User.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> user.getUserName();</span><br><span class="line">        <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> user.getAge();</span><br><span class="line">        <span class="keyword">return</span> name + <span class="string">&quot; &quot;</span> + age;      					<span class="comment">//    结果为： “Jar 26”</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    	e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="Jackson的一些注解"><a href="#Jackson的一些注解" class="headerlink" title="Jackson的一些注解"></a>Jackson的一些注解</h3><p>详情参考：<a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot%20JSON.html">https://mrbird.cc/Spring-Boot%20JSON.html</a></p>
+<ul>
+<li><h5 id="JsonFormat"><a href="#JsonFormat" class="headerlink" title="@JsonFormat"></a>@JsonFormat</h5></li>
+</ul>
+<p>​    用来格式化日期</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@JsonFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span><br><span class="line">private Date birthday;</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/06/11-20/Json/" data-id="clg57xbob0000w8u8arhl6e7f" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Paper/BlockChain" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/06/Paper/BlockChain/" class="article-date">
@@ -209,9 +318,9 @@
 
 
   
-    <article id="post-cache" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/cache" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/05/cache/" class="article-date">
+    <a href="/2023/04/05/1-10/cache/" class="article-date">
   <time datetime="2023-04-05T14:55:12.059Z" itemprop="datePublished">2023-04-05</time>
 </a>
     
@@ -223,7 +332,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/05/cache/">使用缓存</a>
+      <a class="article-title" href="/2023/04/05/1-10/cache/">使用缓存</a>
     </h1>
   
 
@@ -250,7 +359,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/05/cache/" data-id="clg4rkq3n0000ncu8e45zeeed" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/05/1-10/cache/" data-id="clg57xboi0003w8u828mu6482" class="article-share-link">Share</a>
       
       
     </footer>
@@ -260,9 +369,9 @@
 
 
   
-    <article id="post-AopLog" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/AopLog" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/04/AopLog/" class="article-date">
+    <a href="/2023/04/04/1-10/AopLog/" class="article-date">
   <time datetime="2023-04-04T12:58:13.598Z" itemprop="datePublished">2023-04-04</time>
 </a>
     
@@ -274,7 +383,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+      <a class="article-title" href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
     </h1>
   
 
@@ -325,7 +434,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/AopLog/" data-id="clg2bhd8f00001gu83dfq8qdp" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/1-10/AopLog/" data-id="clg57xbog0001w8u8e6s68zpa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -421,9 +530,9 @@
 
 
   
-    <article id="post-jdbc" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/jdbc" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/04/jdbc/" class="article-date">
+    <a href="/2023/04/04/1-10/jdbc/" class="article-date">
   <time datetime="2023-04-04T02:44:12.048Z" itemprop="datePublished">2023-04-04</time>
 </a>
     
@@ -435,7 +544,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/04/jdbc/">Jdbc</a>
+      <a class="article-title" href="/2023/04/04/1-10/jdbc/">Jdbc</a>
     </h1>
   
 
@@ -448,7 +557,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/jdbc/" data-id="clg2bhd8n00051gu8b7pd8598" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/1-10/jdbc/" data-id="clg57xbok0007w8u8031oa9ew" class="article-share-link">Share</a>
       
       
     </footer>
@@ -547,9 +656,9 @@
 
 
   
-    <article id="post-JdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/JdbcTemplate" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/03/JdbcTemplate/" class="article-date">
+    <a href="/2023/04/03/1-10/JdbcTemplate/" class="article-date">
   <time datetime="2023-04-03T08:09:45.135Z" itemprop="datePublished">2023-04-03</time>
 </a>
     
@@ -561,7 +670,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/03/JdbcTemplate/">JdbcTemplate</a>
+      <a class="article-title" href="/2023/04/03/1-10/JdbcTemplate/">JdbcTemplate</a>
     </h1>
   
 
@@ -601,7 +710,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/JdbcTemplate/" data-id="clg2bhd8k00011gu875qg0b23" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/1-10/JdbcTemplate/" data-id="clg57xboi0002w8u87o7vhfob" class="article-share-link">Share</a>
       
       
     </footer>
@@ -611,9 +720,9 @@
 
 
   
-    <article id="post-mybatis" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/mybatis" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/03/mybatis/" class="article-date">
+    <a href="/2023/04/03/1-10/mybatis/" class="article-date">
   <time datetime="2023-04-03T06:50:55.537Z" itemprop="datePublished">2023-04-03</time>
 </a>
     
@@ -625,7 +734,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/03/mybatis/">MyBatis</a>
+      <a class="article-title" href="/2023/04/03/1-10/mybatis/">MyBatis</a>
     </h1>
   
 
@@ -731,7 +840,7 @@ public void foundPropertyNamer() &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/mybatis/" data-id="clg2bhd8o00071gu82ynxf3kv" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/1-10/mybatis/" data-id="clg57xboj0005w8u81m8309yk" class="article-share-link">Share</a>
       
       
     </footer>
@@ -741,9 +850,9 @@ public void foundPropertyNamer() &#123;
 
 
   
-    <article id="post-second" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-1-10/second" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2023/04/03/second/" class="article-date">
+    <a href="/2023/04/03/1-10/second/" class="article-date">
   <time datetime="2023-04-03T05:19:05.404Z" itemprop="datePublished">2023-04-03</time>
 </a>
     
@@ -755,7 +864,7 @@ public void foundPropertyNamer() &#123;
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/03/second/">SecondDay</a>
+      <a class="article-title" href="/2023/04/03/1-10/second/">SecondDay</a>
     </h1>
   
 
@@ -804,70 +913,7 @@ public void foundPropertyNamer() &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/second/" data-id="clg2bhd8n00061gu8h2eba3tc" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-first" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/02/first/" class="article-date">
-  <time datetime="2023-04-02T13:55:20.931Z" itemprop="datePublished">2023-04-02</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/02/first/">FirstDay</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="FirstDay"><a href="#FirstDay" class="headerlink" title="FirstDay:"></a>FirstDay:</h1><p>1.项目打包运行</p>
-<ul>
-<li><p>直接点击package就可以生成jar包</p>
-</li>
-<li><p>可以通过使用<code>java -jar test.jar</code> 的命令来对生成的jar包进行运行</p>
-</li>
-</ul>
-<p>2.springboot的配置</p>
-<ul>
-<li>启动图片可以在<code>src/main/resources</code>目录下的banner文件进行替换更改（最终显示的就是  banner中的内容）这个文件可以是图片也可以是文本。</li>
-</ul>
-<p>3.application.yml 为配置文件   </p>
-<ul>
-<li><p>配置文件可以用来进行属性的配置    </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">my.blog.name=jarninlee&#x27;s blog</span><br><span class="line">my.blog.title=Spring Boot</span><br></pre></td></tr></table></figure>
-
-<p>其中@Value(“${属性名}”)  就可以将配置文件中的值进行注入</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Component</span><br><span class="line">public class BlogProperties &#123;</span><br><span class="line">	</span><br><span class="line">    @Value(&quot;$&#123;my.blog.name&#125;&quot;)</span><br><span class="line">    private String name;</span><br><span class="line">    </span><br><span class="line">    @Value(&quot;$&#123;my.blog.title&#125;&quot;)</span><br><span class="line">    private String title;</span><br><span class="line">    </span><br><span class="line">    // get,set略	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<p>由于上面已经被注册为Compent组件，所以可以直接进行该类的实例注入</p>
-<p>在属性很多的情况下，还可以使用另一种方式，直接指定一个配置文件中的参数然后自动按照变量名进行填充</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@ConfigurationProperties(prefix=&quot;my.blog&quot;)</span><br><span class="line">public class ConfigBean &#123;</span><br><span class="line">    private String name;</span><br><span class="line">    private String title;</span><br><span class="line">    // get,set略</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>需要注意的是使用这种方式，有两种情况：</strong></p>
-<p>​                -直接在Bean类上面添加<code>@Component</code>直接将其注册为bean组件</p>
-<p>​                -或者在SpringBoot启动类上面添加<code>@EnableConfigurationProperties( &#123;ConfigBean.class&#125; )</code></p>
-<p><strong>这两种都可将ConfigBean注册为Bean类型组件</strong></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/first/" data-id="clg2bhd8m00031gu85f26augc" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/1-10/second/" data-id="clg57xbok0006w8u8hcm4bz0v" class="article-share-link">Share</a>
       
       
     </footer>
@@ -913,23 +959,23 @@ public void foundPropertyNamer() &#123;
       <ul>
         
           <li>
+            <a href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/06/Paper/BlockChain/">区块链</a>
           </li>
         
           <li>
-            <a href="/2023/04/05/cache/">使用缓存</a>
+            <a href="/2023/04/05/1-10/cache/">使用缓存</a>
           </li>
         
           <li>
-            <a href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+            <a href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
           </li>
         
           <li>
             <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/04/jdbc/">Jdbc</a>
           </li>
         
       </ul>
