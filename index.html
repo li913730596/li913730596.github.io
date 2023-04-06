@@ -219,10 +219,19 @@
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/05/cache/">使用缓存</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="title：Cache"><a href="#title：Cache" class="headerlink" title="title：Cache"></a>title：Cache</h2><h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>springboot  开启缓存：</p>
+        <h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>springboot  开启缓存：</p>
 <ul>
 <li>引入依赖：</li>
 </ul>
@@ -647,7 +656,24 @@
 <p><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/java-api.html">了解更多属性参考这里</a></p>
 <hr>
 <p>需要用到占位符的时候例如：insert into table values(#{id}, #{name}, #{password})</p>
-<p>这其中的id、name、password等都要与实体类中的属性（getter  setter方法名 去掉get set 然后将首字母小写）一致。 不用实体类传入的时候就直接与数据库列名一致即可。</p>
+<p>这其中的id、name、password等都要与实体类中的属性（getter  setter方法名 去掉get set 然后将首字母小写  <strong>这里如果JavaBean类中的成员变量首字母大写，那么属性的首字母也大写</strong>）一致。 不用实体类传入的时候就直接与数据库列名一致即可。</p>
+<pre><code>@Test
+public void foundPropertyNamer() &#123;
+    String isName = &quot;isName&quot;;
+    String getName = &quot;getName&quot;;
+    String getnMetaType = &quot;getnMetaType&quot;;
+    String getNMetaType = &quot;getNMetaType&quot;;
+ 
+    Stream.of(isName,getName,getnMetaType,getNMetaType)
+            .forEach(methodName-&gt;System.out.println(&quot;方法名字是:&quot;+methodName+&quot; 属性名字:&quot;+ PropertyNamer.methodToProperty(methodName)));
+&#125;
+
+#输出结果如下:
+方法名字是:isName 属性名字:name 
+方法名字是:getName 属性名字:name 
+方法名字是:getnMetaType 属性名字:nMetaType //这个以及下面的属性第二个字母都是大写，所以直接返回name
+方法名字是:getNMetaType 属性名字:NMetaType
+</code></pre>
 <hr>
 <p>进行检验：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FruitMapper fruitMapper;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/fruit&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fruitMapper.getAll().toString();</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -662,6 +688,7 @@
 <hr>
 <p>使用符号# 传入的参数在SQL中显示为字符串 （会自动加上””)， $ 传入的参数就是传入的值本身</p>
 <p>所以使用#能够在很大程度上<strong>防止sql注入</strong>， $ 则<strong>无法防止sql注入</strong>。</p>
+<p>可参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19387933/article/details/123256034">https://blog.csdn.net/qq_19387933/article/details/123256034</a></p>
 <h3 id="多个Druid源的数据库连接"><a href="#多个Druid源的数据库连接" class="headerlink" title="多个Druid源的数据库连接"></a>多个Druid源的数据库连接</h3><ul>
 <li>首先配置两种数据库连接配置</li>
 </ul>
@@ -890,7 +917,7 @@
           </li>
         
           <li>
-            <a href="/2023/04/05/cache/">(no title)</a>
+            <a href="/2023/04/05/cache/">使用缓存</a>
           </li>
         
           <li>
