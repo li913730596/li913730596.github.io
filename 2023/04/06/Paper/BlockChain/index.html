@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>区块链 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="区块链的性能问题以及扩展问题交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。三种层次的方案图：   链上扩展(扩容方案)  一次生成多个区块 例如：Bitcoin-NG:  ​    使用了PoW工作量证明共识协议来选择领导者，领导者可以写入一个主块和多个微块，主块中不包含任何交易信息，只负责记录领导者的选举过程和结果，交易信息记录在微块中。 ​">
+<meta property="og:type" content="article">
+<meta property="og:title" content="区块链">
+<meta property="og:url" content="http://example.com/2023/04/06/Paper/BlockChain/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="区块链的性能问题以及扩展问题交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。三种层次的方案图：   链上扩展(扩容方案)  一次生成多个区块 例如：Bitcoin-NG:  ​    使用了PoW工作量证明共识协议来选择领导者，领导者可以写入一个主块和多个微块，主块中不包含任何交易信息，只负责记录领导者的选举过程和结果，交易信息记录在微块中。 ​">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://pic.imgdb.cn/item/642e6cbba682492fccbc1e3a.png">
+<meta property="og:image" content="https://pic.imgdb.cn/item/642e6ad9a682492fccb9b38e.png">
+<meta property="article:published_time" content="2023-04-06T04:11:09.744Z">
+<meta property="article:modified_time" content="2023-04-06T06:55:18.681Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic.imgdb.cn/item/642e6cbba682492fccbc1e3a.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Paper/BlockChain" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/06/Paper/BlockChain/" class="article-date">
+  <time datetime="2023-04-06T04:11:09.744Z" itemprop="datePublished">2023-04-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      区块链
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="区块链的性能问题以及扩展问题"><a href="#区块链的性能问题以及扩展问题" class="headerlink" title="区块链的性能问题以及扩展问题"></a>区块链的性能问题以及扩展问题</h1><h5 id="交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。"><a href="#交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。" class="headerlink" title="交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。"></a>交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。</h5><p>三种层次的方案图：</p>
+<p><img src="https://pic.imgdb.cn/item/642e6cbba682492fccbc1e3a.png" alt="image-20230406145419098"></p>
+<ul>
+<li><p>链上扩展(扩容方案)</p>
+<ul>
+<li><p>一次生成多个区块</p>
+<p>例如：Bitcoin-NG:</p>
+<blockquote>
+<p>​    使用了PoW工作量证明共识协议来选择领导者，领导者可以写入一个主块和多个微块，主块中不包含任何交易信息，只负责记录领导者的选举过程和结果，交易信息记录在微块中。</p>
+<p>​    在每个领导者被选举出来后，该领导者在一段时间内负责所有交易信息的验证和打包工作，即生成微块，此过程不涉及PoW共识机制，因此记账速度得到提升，区块链系统的交易吞吐量也随之提升。</p>
+</blockquote>
+</li>
+<li><p>混合共识协议</p>
+<p>例如：Algorand：</p>
+<blockquote>
+<p>Algorand将PoW/PoS共识思想用于委员会创建，拜占庭思想用于委员会内部达成共识。</p>
+</blockquote>
+</li>
+<li><p>分片</p>
+<blockquote>
+<p>​    通过改变网络内部各步骤之间的验证方式来提高区块链可扩展性的一种方法.</p>
+<p>​    其核心思想是“化整为零”，将区块链网络划分成若干能够处理交易的较小组件式网络，以实现每秒处理数千笔交易的支付系统。</p>
+<p>​    <em><u><strong>分片机制需要面临的挑战是1%攻击, 即保证攻击者在分片过程中无法在任何一个分片中实现51%攻击, 以及如何保证攻击者无法在分片处理交易的过程中, 实现双花攻击.   以及 如何快速处理跨碎片事务，同时确保这些事务的一致性。</strong></u></em></p>
+</blockquote>
+<ul>
+<li><p>网络分片</p>
+<blockquote>
+<p>网络分片是随机选择节点形成分片，分片内利用共识协议达成一致</p>
+</blockquote>
+</li>
+<li><p>交易分片</p>
+<blockquote>
+<p>交易分片是根据交易地址分片，便于在分片内检测双花</p>
+</blockquote>
+</li>
+<li><p>状态分片</p>
+<blockquote>
+<p>状态分片指的是划分存储区，每个分区只储存分片数据，而不是存储完整的区块链状态</p>
+<p><em><strong>如何确保跨分片通信成本不会超过状态分片的所获的的性能增益仍然是一个值得深入研究的问题</strong></em></p>
+</blockquote>
+</li>
+</ul>
+<p><u>在网络和交易分片中，每个节点存储着系统的全部状态，所以各个分片之间不需要频繁的交流去确认其他分片的状态。</u></p>
+<p><u>状态分片，显然最大的优势是他解决的日益庞大的存储问题。</u></p>
+<p>关于分片的参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/gaohaoyang0123/article/details/96743105">https://blog.csdn.net/gaohaoyang0123/article/details/96743105</a></p>
+<hr>
+<p>​    Elastico的方案基于UTXO模型, 因此在交易处理时, 通过<strong>交易的输入作为基准映射</strong>到不同的分片处理.在UTXO模型中, 攻击者想要实现双花必须产生2笔<strong>引用同一输出</strong>（作为输入）的交易.</p>
+<p>​    Zilliqa的方案基于账户模型, 因此在交易处理时, 通过<strong>发送者的身份作为基准</strong>映射到不同的分片中.一轮共识过程中, 不同发送者的交易可能映射到不同的分片 (不同验证者) ,但<strong>同一发送者的交易都会由同一分片处理</strong>, 因此分片内的诚实节点对特定发送者的状态是确定的.因此其能够在基于账户的模型下抵御双花攻击.</p>
+<hr>
+</li>
+<li></li>
+<li><p>有向无环图结构</p>
+<blockquote>
+<p>有向无环图结构是一种非线性数据结构，将其应用到区块链中，从拓扑结构角度改变了区块的单向链接形式，支持并发上链，平行验证。    </p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>链下扩展(扩容)</p>
+<ul>
+<li><p>状态通道（子链）</p>
+<blockquote>
+<p>​    最早的状态通道是闪电网络。</p>
+<p>​    双方节点直接建立的点对点渠道，双方可以在通道内快速地进行交易并保证状态可以随时被公开，通道关闭时，最终状态会传回到链上。</p>
+<p>​    通道内的交易转账的安全性主要依靠数字签名、合约锁定等技术保障。</p>
+</blockquote>
+</li>
+<li><p>链下计算链上验证</p>
+<blockquote>
+<p>链下外包执行机制。用户上传代码任务并提供少量佣金，链外外包用户代理执行并提供足够执行链上合约数量的保证金，其他链上节点充当验证者的角色监督代码执行的正确性。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h1><hr>
+<ul>
+<li><p><strong>存在的问题</strong>：整个分片机制在运行过程中有大量时间用于处理交易以外的工作，同时，为了防止节点作恶，不少分片技术需要大量时间和开销进行分片重配置</p>
+<ul>
+<li>小规模的分片意味对双花攻击防御能力的下降，安全性更高的片内共识协议也将付出更高的共识代价，大多数协议对于安全性的分析集中在<strong>拜占庭对手规模、信息可靠性以及分片随机性方面</strong></li>
+</ul>
+</li>
+<li><p>分片除了上面说到的 还有一些解决方案提出了一种新的结构，由主链和多个分片链组成。（如下图）</p>
+<p><img src="https://pic.imgdb.cn/item/642e6ad9a682492fccb9b38e.png"></p>
+<p>每个分片维护一个分片链，并定期将其状态提交到主链。从上图 所示的架构中，我们可以看到每个分片都有一个专用的链。在这种架构下，跨分片事务通过主链处理，允许接收不同分片提交的跨分片事务，可以通过所有分片进行验证，以确保跨分片事务的正确性。然而，当跨分片事务的规模在区块链系统中增加时，主链将成为整体系统的瓶颈，因为大量的事务给存储和通信带来了很大的压力。</p>
+</li>
+</ul>
+<h1 id="有关的知识点"><a href="#有关的知识点" class="headerlink" title="有关的知识点"></a>有关的知识点</h1><ul>
+<li>1.环签名</li>
+</ul>
+<blockquote>
+<p>环签名具有无条件匿名性，攻击者即使非法获取了所有可能签名者的私钥，也无法确定签名是由环中哪个成员生成的，实现了签名人身份的隐藏。同时具有不可伪造性，攻击者在不知道任何成员私钥的情况下，无法成功伪造一个合法的签名。</p>
+<p>流程：</p>
+<p>​    (1)密钥生成，为环中的成员产生（PKi,SKi）密钥对；</p>
+<p>​    (2)签名，签名者用自己的私钥x和任意n个环成员的公钥为消息m生成签名；</p>
+<p>​    (3)签名验证，验证者根据签名和消息m，验证签名是否为环中成员所签，如果有效就接收，否则丢弃。</p>
+</blockquote>
+<ul>
+<li>2.零知识证明</li>
+</ul>
+<blockquote>
+<p>​    证明者能够在不向验证者提供任何有用的信息的情况下，使验证者相信某个论断是正确的。</p>
+</blockquote>
+<ul>
+<li>3.安全多方计算</li>
+</ul>
+<blockquote>
+<p>在各方不可信的情况下，不泄露输入数据来安全地进行多方协同的计算</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/06/Paper/BlockChain/" data-id="clg4rkq3r0001ncu89rtn49f1" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2023/04/05/cache/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/06/Paper/BlockChain/">区块链</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/05/cache/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/04/AopLog/">使用Aop来记录用户操作日志</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/04/jdbc/">Jdbc</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
