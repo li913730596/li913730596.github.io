@@ -102,6 +102,10 @@
 <p><img src="https://pic.imgdb.cn/item/642fcdc7a682492fcc520dff.png" alt="image-20230407160047480"></p>
 <p><img src="https://pic.imgdb.cn/item/642fd047a682492fcc559865.png" alt="image-20230407161142009"></p>
 <p>​        <strong>本质上还是继承了Runnable,只不过为了能够得到线程中任务的返回值，需要传入一个Callable接口的参数，这个接口下的call方法是有返回值的。 同时又因为，FutureTask继承了Future接口 所以可以用get()方法获取call方法的返回值。</strong></p>
+<ul>
+<li>线程上下文切换：cpu不再执行当前的线程，转而执行另一个线程。每次切换线程时，操作系统都需要记录线程当前的状态（记录现场）    </li>
+</ul>
+<p><img src="https://pic.imgdb.cn/item/642fff96a682492fcccca49d.png" alt="image-20230407193313881"></p>
 
       
     </div>
