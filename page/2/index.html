@@ -64,6 +64,79 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-1-10/second" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/1-10/second/" class="article-date">
+  <time datetime="2023-04-03T05:19:05.404Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/03/1-10/second/">SecondDay</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>多环境配置Profile </p>
+<p>Profile用来针对不同的环境下使用不同的配置文件，多环境配置文件必须以<code>application-&#123;profile&#125;.properties</code>的格式命，其中<code>&#123;profile&#125;</code>为环境标识。比如定义两个配置文件：</p>
+<ul>
+<li>application-dev.yml:开发环境</li>
+</ul>
+<hr>
+<p>server:</p>
+<p>​    port: 8080</p>
+<hr>
+<ul>
+<li>application-pord.yml:生产环境</li>
+</ul>
+<hr>
+<p>server:</p>
+<p>​    port: 8081</p>
+<hr>
+</li>
+</ul>
+<p>需要切换时就可以直接在<code>application.yml</code>中使用:</p>
+<hr>
+<p>spring:</p>
+<p>​    profiles:</p>
+<p>​            active: dev/prod</p>
+<hr>
+<p>进行切换</p>
+<ul>
+<li>在不得不使用xml配置文件的时候：<ul>
+<li>在入口类里通过注解<code>@ImportResource(&#123;&quot;classpath:some-application.xml&quot;&#125;)</code>来引入xml配置文件。</li>
+</ul>
+</li>
+</ul>
+<h2 id="使用Druid连接池"><a href="#使用Druid连接池" class="headerlink" title="使用Druid连接池"></a>使用Druid连接池</h2><p>​    </p>
+<ul>
+<li>这里出现了问题，当我们没有引入<code>spring-boot-starter-web</code>的时候是不会一直处于启动状态的</li>
+<li>当我们引入了Mybatis  或者  Druid的时候必须要进行数据库的设置，否则会报错</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/1-10/second/" data-id="clg69u26f000ci4u89t12c59a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-1-10/first" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/02/1-10/first/" class="article-date">
@@ -117,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/1-10/first/" data-id="clg57xboj0004w8u83jli1fur" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/1-10/first/" data-id="clg69u26a0004i4u87sp86qc3" class="article-share-link">Share</a>
       
       
     </footer>
@@ -172,7 +245,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg2bhd8m00041gu88k9pdoz5" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/02/hello-world/" data-id="clg69u2630001i4u85ji7b3il" class="article-share-link">Share</a>
       
       
     </footer>
@@ -218,6 +291,10 @@
       <ul>
         
           <li>
+            <a href="/2023/04/07/JAVA/JUC/">并发初级</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
           </li>
         
@@ -231,10 +308,6 @@
         
           <li>
             <a href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
           </li>
         
       </ul>

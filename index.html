@@ -64,6 +64,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-JAVA/JUC" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/07/JAVA/JUC/" class="article-date">
+  <time datetime="2023-04-07T07:13:36.860Z" itemprop="datePublished">2023-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/07/JAVA/JUC/">并发初级</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="4-7"><a href="#4-7" class="headerlink" title="4.7"></a>4.7</h3><p>并发 (deal)  并行（do）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//方法一</span></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        thread.setName(<span class="string">&quot;t1&quot;</span>);</span><br><span class="line">        thread.start();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//方法一的简化：利用lamaba</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; log.info(<span class="string">&quot;inThread&quot;</span>)).start();</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">		<span class="comment">//方法二：利用Runnable接口</span></span><br><span class="line">        <span class="type">Runnable</span> <span class="variable">inThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(inThread, <span class="string">&quot;t2&quot;</span>);</span><br><span class="line">        thread1.start();</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;outThread&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>针对Runnable 接口  和  Thread直接创建这两种方式， 推荐使用Runnable接口的实现，这样就可以将我们创建的任务与Thread类分离开。</li>
+</ul>
+<ul>
+<li>第三种创建线程的方式：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> <span class="keyword">throws</span> ExecutionException, InterruptedException &#123;</span><br><span class="line">        FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> <span class="title class_">FutureTask</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">Callable</span>&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Integer <span class="title function_">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(futureTask,<span class="string">&quot;t3&quot;</span>);</span><br><span class="line">        thread.start();</span><br><span class="line">        System.out.println(futureTask.get());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">-----------</span><br><span class="line">结果：</span><br><span class="line"><span class="number">2023</span>-<span class="number">04</span>-<span class="number">07</span> <span class="number">16</span>:<span class="number">05</span>:<span class="number">25.435</span>  INFO <span class="number">4032</span> --- [  t3] com.example.Jucday01ApplicationTests     : inThread</span><br><span class="line"><span class="number">100</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic.imgdb.cn/item/642fcdc7a682492fcc520dff.png" alt="image-20230407160047480"></p>
+<p><img src="https://pic.imgdb.cn/item/642fd047a682492fcc559865.png" alt="image-20230407161142009"></p>
+<p>​        <strong>本质上还是继承了Runnable,只不过为了能够得到线程中任务的返回值，需要传入一个Callable接口的参数，这个接口下的call方法是有返回值的。 同时又因为，FutureTask继承了Future接口 所以可以用get()方法获取call方法的返回值。</strong></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/07/JAVA/JUC/" data-id="clg69u26d000ai4u8hzefa18u" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-11-20/Json" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/06/11-20/Json/" class="article-date">
@@ -163,7 +215,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/06/11-20/Json/" data-id="clg57xbob0000w8u8arhl6e7f" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/06/11-20/Json/" data-id="clg69u2650002i4u8h6sk2nia" class="article-share-link">Share</a>
       
       
     </footer>
@@ -304,11 +356,29 @@
 <blockquote>
 <p>在各方不可信的情况下，不泄露输入数据来安全地进行多方协同的计算</p>
 </blockquote>
+<hr>
+<hr>
+<h1 id="共识协议"><a href="#共识协议" class="headerlink" title="共识协议"></a>共识协议</h1><ul>
+<li><p><strong>分布式系统面临的一致性问题：拜占庭将军问题；</strong></p>
+</li>
+<li><p><strong>共识算法的核心就是解决拜占庭将军问题。</strong></p>
+</li>
+<li><p><strong>共识机制就是用来解决分布式系统的一致性问题,其核心为在某个协议(共识算法)保障下,在有限的时间内,使得指定操作在分布式网络中是一致的、被承认的、不可篡改的。</strong></p>
+</li>
+</ul>
+<p>​    在中心化的分布式系统   兰伯特提出了Paxos算法。</p>
+<p>​    在去中心化的分布式系统（区块链），1999年PBFT算法（Practical Byzantine Fault Tolerance, 实用的拜占庭容错算法）。</p>
+<blockquote>
+<p>1.叛徒等于或大于三分之一，拜占庭问题无解；<br>2.当叛徒数量不到三分之一，那么忠诚将军就至少有三分之二，此时拜占庭问题有解，仍然可以达到容错。</p>
+</blockquote>
+<p>​    在比特币中采用了POW的基于工作量证明的共识机制。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.POW工作量证明机制提高了做叛徒（发布虚假区块）的成本，在工作量证明下，只有第一个完成证明的节点才能广播区块，竞争难度非常大，需要很高算例，如果不成功其算力就白白的耗费了（算力是需要成本的），如果有这样的算力作为诚实的节点，可以获得很大的收益（这就是矿工所作的工作），这也实际就不会有做叛徒的动机，整个系统也因此而更稳定。</span><br><span class="line">b.对于51%攻击问题，那更是提高了做叛徒的成本。拥有这么大的算力的，自然就是希望依赖比特币系统而盈利的，当然更不会造假而损坏自身利益。</span><br><span class="line">c.当然很多人批评POW工作量证明机制造成巨大的电力浪费，促使人们去探索新的解决一致性（共识）问题的机制：权益证明机制（POS : proof  of  Stake）是一个代表。在拜占庭将军问题的角度来看，它同样提高了做叛徒的成本，因为账户需要首先持有大量余额才能有更多的几率广播区块。如果已经拥有这么大的利益，当然更不会造假而损坏自身利益了。</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/06/Paper/BlockChain/" data-id="clg4rkq3r0001ncu89rtn49f1" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/06/Paper/BlockChain/" data-id="clg69u26b0005i4u8af490h5u" class="article-share-link">Share</a>
       
       
     </footer>
@@ -359,7 +429,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/05/1-10/cache/" data-id="clg57xboi0003w8u828mu6482" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/05/1-10/cache/" data-id="clg69u26d000bi4u8h4847lif" class="article-share-link">Share</a>
       
       
     </footer>
@@ -434,7 +504,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/1-10/AopLog/" data-id="clg57xbog0001w8u8e6s68zpa" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/1-10/AopLog/" data-id="clg69u2680003i4u88nibgxb6" class="article-share-link">Share</a>
       
       
     </footer>
@@ -520,7 +590,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/Paper/SDNLearn/" data-id="clg2bhd8o00081gu85ra6d1ge" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/Paper/SDNLearn/" data-id="clg69u26c0009i4u86yjickfa" class="article-share-link">Share</a>
       
       
     </footer>
@@ -557,7 +627,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/04/1-10/jdbc/" data-id="clg57xbok0007w8u8031oa9ew" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/04/1-10/jdbc/" data-id="clg69u26c0008i4u8afns7vwr" class="article-share-link">Share</a>
       
       
     </footer>
@@ -646,7 +716,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg2bhd8l00021gu80suhev76" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/boot/" data-id="clg69u2600000i4u88g8t4tnm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -710,7 +780,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/1-10/JdbcTemplate/" data-id="clg57xboi0002w8u87o7vhfob" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/1-10/JdbcTemplate/" data-id="clg69u26b0006i4u86gat794s" class="article-share-link">Share</a>
       
       
     </footer>
@@ -840,80 +910,7 @@ public void foundPropertyNamer() &#123;
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/1-10/mybatis/" data-id="clg57xboj0005w8u81m8309yk" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-1-10/second" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/03/1-10/second/" class="article-date">
-  <time datetime="2023-04-03T05:19:05.404Z" itemprop="datePublished">2023-04-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/03/1-10/second/">SecondDay</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>多环境配置Profile </p>
-<p>Profile用来针对不同的环境下使用不同的配置文件，多环境配置文件必须以<code>application-&#123;profile&#125;.properties</code>的格式命，其中<code>&#123;profile&#125;</code>为环境标识。比如定义两个配置文件：</p>
-<ul>
-<li>application-dev.yml:开发环境</li>
-</ul>
-<hr>
-<p>server:</p>
-<p>​    port: 8080</p>
-<hr>
-<ul>
-<li>application-pord.yml:生产环境</li>
-</ul>
-<hr>
-<p>server:</p>
-<p>​    port: 8081</p>
-<hr>
-</li>
-</ul>
-<p>需要切换时就可以直接在<code>application.yml</code>中使用:</p>
-<hr>
-<p>spring:</p>
-<p>​    profiles:</p>
-<p>​            active: dev/prod</p>
-<hr>
-<p>进行切换</p>
-<ul>
-<li>在不得不使用xml配置文件的时候：<ul>
-<li>在入口类里通过注解<code>@ImportResource(&#123;&quot;classpath:some-application.xml&quot;&#125;)</code>来引入xml配置文件。</li>
-</ul>
-</li>
-</ul>
-<h2 id="使用Druid连接池"><a href="#使用Druid连接池" class="headerlink" title="使用Druid连接池"></a>使用Druid连接池</h2><p>​    </p>
-<ul>
-<li>这里出现了问题，当我们没有引入<code>spring-boot-starter-web</code>的时候是不会一直处于启动状态的</li>
-<li>当我们引入了Mybatis  或者  Druid的时候必须要进行数据库的设置，否则会报错</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/1-10/second/" data-id="clg57xbok0006w8u8hcm4bz0v" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/04/03/1-10/mybatis/" data-id="clg69u26c0007i4u8a0e6bb9h" class="article-share-link">Share</a>
       
       
     </footer>
@@ -959,6 +956,10 @@ public void foundPropertyNamer() &#123;
       <ul>
         
           <li>
+            <a href="/2023/04/07/JAVA/JUC/">并发初级</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
           </li>
         
@@ -972,10 +973,6 @@ public void foundPropertyNamer() &#123;
         
           <li>
             <a href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/04/Paper/SDNLearn/">SDN学习记录</a>
           </li>
         
       </ul>
