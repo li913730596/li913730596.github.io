@@ -64,6 +64,136 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-1-10/mybatis" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/03/1-10/mybatis/" class="article-date">
+  <time datetime="2023-04-03T06:50:55.537Z" itemprop="datePublished">2023-04-03</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/03/1-10/mybatis/">MyBatis</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="SpringBoot-中Mybatis的使用"><a href="#SpringBoot-中Mybatis的使用" class="headerlink" title="SpringBoot 中Mybatis的使用"></a>SpringBoot 中Mybatis的使用</h1><p>1.引入依赖</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;<span class="number">2.0</span><span class="number">.0</span>&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2.进行相关配置</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">      <span class="attr">url:</span> <span class="string">jdbc:mysql:///fruitdb</span></span><br><span class="line">      <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">      <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">      <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
+
+<p>3.相关操作</p>
+<p>创建一个Mapper接口类， 并在该类上面加上@Mapper注解</p>
+<p>然后进行sql方法的书写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Mapper</span><br><span class="line">public interface FruitMapper &#123;</span><br><span class="line"></span><br><span class="line">    @Select(&quot;select * from t_fruit&quot;)</span><br><span class="line">    List&lt;Fruit&gt; getAll();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里由于我的实体类中的属性何数据库中命名一致，所以就没有用到**@Result**</p>
+<hr>
+<p>@Select 是查询类的注解，所有的查询均使用这个<br>@Result 修饰返回的结果集，关联实体类属性和数据库字段一一对应，如果实体类属性和数据库属性名保持一致，就不需要这个属性来修饰。</p>
+<p>例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Results(&#123;</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;userSex&quot;,  column = &quot;user_sex&quot;, javaType = UserSexEnum.class),</span></span><br><span class="line"><span class="meta">			@Result(property = &quot;nickName&quot;, column = &quot;nick_name&quot;)</span></span><br><span class="line"><span class="meta">		&#125;)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>@Insert 插入数据库使用，直接传入实体类会自动解析属性到对应的值<br>@Update 负责修改，也可以直接传入对象<br>@delete 负责删除</p>
+<p><a target="_blank" rel="noopener" href="https://mybatis.org/mybatis-3/zh/java-api.html">了解更多属性参考这里</a></p>
+<hr>
+<p>需要用到占位符的时候例如：insert into table values(#{id}, #{name}, #{password})</p>
+<p>这其中的id、name、password等都要与实体类中的属性（getter  setter方法名 去掉get set 然后将首字母小写  <strong>这里如果JavaBean类中的成员变量首字母大写，那么属性的首字母也大写</strong>）一致。 不用实体类传入的时候就直接与数据库列名一致即可。</p>
+<pre><code>@Test
+public void foundPropertyNamer() &#123;
+    String isName = &quot;isName&quot;;
+    String getName = &quot;getName&quot;;
+    String getnMetaType = &quot;getnMetaType&quot;;
+    String getNMetaType = &quot;getNMetaType&quot;;
+ 
+    Stream.of(isName,getName,getnMetaType,getNMetaType)
+            .forEach(methodName-&gt;System.out.println(&quot;方法名字是:&quot;+methodName+&quot; 属性名字:&quot;+ PropertyNamer.methodToProperty(methodName)));
+&#125;
+
+#输出结果如下:
+方法名字是:isName 属性名字:name 
+方法名字是:getName 属性名字:name 
+方法名字是:getnMetaType 属性名字:nMetaType //这个以及下面的属性第二个字母都是大写，所以直接返回name
+方法名字是:getNMetaType 属性名字:NMetaType
+</code></pre>
+<hr>
+<p>进行检验：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">FruitController</span> &#123;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> FruitMapper fruitMapper;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/fruit&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> fruitMapper.getAll().toString();</span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>最终返回结果为：</p>
+<p><img src="https://pic.imgdb.cn/item/642a7ca2a682492fcc19676c.png" alt="image-20230403150912425"></p>
+<ul>
+<li>需要注意：</li>
+</ul>
+<hr>
+<p>使用符号# 传入的参数在SQL中显示为字符串 （会自动加上””)， $ 传入的参数就是传入的值本身</p>
+<p>所以使用#能够在很大程度上<strong>防止sql注入</strong>， $ 则<strong>无法防止sql注入</strong>。</p>
+<p>可参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_19387933/article/details/123256034">https://blog.csdn.net/qq_19387933/article/details/123256034</a></p>
+<h3 id="多个Druid源的数据库连接"><a href="#多个Druid源的数据库连接" class="headerlink" title="多个Druid源的数据库连接"></a>多个Druid源的数据库连接</h3><ul>
+<li>首先配置两种数据库连接配置</li>
+</ul>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">datasource:</span></span><br><span class="line">    <span class="attr">druid:</span></span><br><span class="line">      <span class="comment"># 数据库访问配置, 使用druid数据源</span></span><br><span class="line">      <span class="comment"># 数据源1 mysql</span></span><br><span class="line">      <span class="attr">mysql:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">com.alibaba.druid.pool.DruidDataSource</span></span><br><span class="line">        <span class="attr">driver-class-name:</span> <span class="string">com.mysql.jdbc.Driver</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;rewriteBatchedStatements=true&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;zeroDateTimeBehavior=convertToNull</span></span><br><span class="line">        <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">        <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">       <span class="comment">#数据源2 mysql服务中的另一个数据库（也可以是其他类型数据库）</span></span><br><span class="line">       <span class="attr">mysql2:</span></span><br><span class="line">        <span class="attr">type:</span> <span class="string">com.alibaba.druid.pool.DruidDataSource</span></span><br><span class="line">        <span class="attr">driver-class-name:</span> <span class="string">com.mysql.cj.jdbc.Driver</span></span><br><span class="line">        <span class="attr">url:</span> <span class="string">jdbc:mysql://localhost:3306/atguigu?useUnicode=true&amp;characterEncoding=UTF-8&amp;rewriteBatchedStatements=true&amp;autoReconnect=true&amp;failOverReadOnly=false&amp;zeroDateTimeBehavior=convertToNull</span></span><br><span class="line">        <span class="attr">username:</span> <span class="string">root</span></span><br><span class="line">        <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">      <span class="comment"># 数据源3 oracle</span></span><br><span class="line">      <span class="comment">#oracle: </span></span><br><span class="line">      <span class="comment">#  type: com.alibaba.druid.pool.DruidDataSource</span></span><br><span class="line">      <span class="comment">#  driver-class-name: oracle.jdbc.driver.OracleDriver</span></span><br><span class="line">      <span class="comment">#  url: jdbc:oracle:thin:@localhost:1521:ORCL</span></span><br><span class="line">      <span class="comment">#  username: scott</span></span><br><span class="line">      <span class="comment">#  password: 123456</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>然后创建一个多数据源配置类，根据application.yml分别配置一个Mysql和Oracle的数据源：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@MapperScan(basePackages = &quot;com.example.mapperone&quot;, sqlSessionFactoryRef = &quot;mysqlSqlSessionFactory&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MysqlDataSourceConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.druid.mysql&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">mysqlDataSource</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="keyword">public</span> DataSourceTransactionManager <span class="title function_">mysqlTransactionManager</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DataSourceTransactionManager</span>(mysqlDataSource());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactory <span class="title function_">mysqlSqlSessionFactory</span><span class="params">(<span class="meta">@Qualifier(&quot;mysqlDataSource&quot;)</span> DataSource dataSource)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">SqlSessionFactoryBean</span> <span class="variable">sessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line"></span><br><span class="line">        sessionFactory.setDataSource(dataSource);</span><br><span class="line">        <span class="keyword">return</span> sessionFactory.getObject();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://pic.imgdb.cn/item/642bbb5f6ea21b9a9e33644c.png" alt="image-20230404135320046"></p>
+<hr>
+<p>解释：<br>    使用@Configuration注解表明这是一个Java配置类。<br>    使用@MapperScan注解配置<strong>MyBatis Mapper扫描器</strong>，指定Mapper接口所在的包路径和SqlSessionFactory的名称。<br>    声明两个常量PACKAGE和MAPPER_LOCATION，用于<strong>指定MySQL DAO和MyBatis Mapper的位置</strong>。<br>    使用@Bean注解创建一个名为mysqldatasource的DataSource Bean，指定了Druid<strong>连接池的配置信息</strong>。<br>    使用@Bean注解创建一个名为mysqlTransactionManager的DataSourceTransactionManager Bean，用于<strong>事务管理。</strong><br>    使用@Bean注解创建一个名为mysqlSqlSessionFactory的SqlSessionFactory Bean，用于<strong>创建MyBatis的SqlSession实例</strong>，从而执行SQL语句和处理结果集。<br>    通过@Qualifier注解指定SqlSessionFactory所使用的DataSource，即上面创建的mysqldatasource Bean。<br>    使用SqlSessionFactoryBean<strong>设置DataSource</strong>，以及<strong>指定Mapper文件的位置。</strong>   <strong>sqlsession与数据源有关所以再多数据源的情况下需要制定对应的SqlSessionFactory.</strong><br>    返回SqlSessionFactory的实例。</p>
+<hr>
+<p>上面代码配置了一个名为mysqldatasource的数据源，对应application.yml中<code>spring.datasource.druid.mysql</code>前缀配置的数据库。然后创建了一个名为mysqlSqlSessionFactory的Bean，并且注入了mysqldatasource。与此同时，还分别定了两个扫描路径PACKAGE和MAPPER_LOCATION，前者为Mysql数据库对应的mapper接口地址，后者为对应的mapper xml文件路径。</p>
+<p><code>@Primary</code>标志这个Bean如果在多个同类Bean候选时，该Bean优先被考虑。多数据源配置的时候，必须要有一个主数据源，用<code>@Primary</code>标志该Bean。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@MapperScan(basePackages = MysqlDatasourceConfig.PACKAGE, sqlSessionFactoryRef = &quot;mysqlSqlSessionFactory&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>这行代码的作用：</p>
+<p>​    配置的作用是将MyBatis Mapper接口和对应的SQL语句映射到具体的数据库操作上，使得应用程序可以使用这些接口执行SQL语句和访问数据库。在这个配置中，指定了要扫描的Mapper接口的包路径，以及要使用的SqlSessionFactory Bean的名称。这样，在启动应用程序时，MyBatis就会自动扫描指定的包路径下的Mapper接口，并将其注册到SqlSessionFactory中，从而使应用程序能够访问MySQL数据库。</p>
+<ul>
+<li>创建第二个数据源配置（包括mapper接口位置以及所用的SqlSessionFactory）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@MapperScan(basePackages = &quot;com.example.mappertwo&quot;, sqlSessionFactoryRef = &quot;mysqlSqlSessionFactoryTwo&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MysqlDataSourceTwoConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.druid.mysql2&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">mysqlDataSourceTwo</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> DruidDataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> DataSourceTransactionManager <span class="title function_">mysqlTransactionManagerTwo</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">DataSourceTransactionManager</span>(mysqlDataSourceTwo());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> SqlSessionFactory <span class="title function_">mysqlSqlSessionFactoryTwo</span><span class="params">(<span class="meta">@Qualifier(&quot;mysqlDataSourceTwo&quot;)</span> DataSource dataSource)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="type">SqlSessionFactoryBean</span> <span class="variable">sessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SqlSessionFactoryBean</span>();</span><br><span class="line"></span><br><span class="line">        sessionFactory.setDataSource(dataSource);</span><br><span class="line">        <span class="keyword">return</span> sessionFactory.getObject();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://pic.imgdb.cn/item/642bbbaf6ea21b9a9e360f45.png" alt="image-20230404135440895"></p>
+<p>最终直接在controller进行验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MysqlController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MysqlMapper mapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> MysqlMapperTwo mapperTwo;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/mysqlmapper&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">getAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mapper.getAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/mysqlmappertwo&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;Map&lt;String, Object&gt;&gt; <span class="title function_">getAllTwo</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> mapperTwo.getAll();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>得到结果：</p>
+<p><img src="https://pic.imgdb.cn/item/642bbc976ea21b9a9e3de977.png" alt="image-20230404135835057"></p>
+<p><img src="https://pic.imgdb.cn/item/642bbcca6ea21b9a9e3fbabf.png" alt="image-20230404135919592"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/03/1-10/mybatis/" data-id="clg69u26c0007i4u8a0e6bb9h" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-1-10/second" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/03/1-10/second/" class="article-date">
@@ -295,6 +425,10 @@
           </li>
         
           <li>
+            <a href="/2023/04/06/Paper/Pyramid/">“分层分片区块链系统--金字塔 Pyramid：A Layered Sharding Blockchain System”</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
           </li>
         
@@ -304,10 +438,6 @@
         
           <li>
             <a href="/2023/04/05/1-10/cache/">使用缓存</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/04/1-10/AopLog/">使用Aop来记录用户操作日志</a>
           </li>
         
       </ul>
