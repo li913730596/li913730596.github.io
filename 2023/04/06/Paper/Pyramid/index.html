@@ -18,7 +18,7 @@
 <meta property="og:image" content="https://pic.imgdb.cn/item/642f8b6fa682492fccf8cf36.png">
 <meta property="og:image" content="https://pic.imgdb.cn/item/642f8ffca682492fccfe5bef.png">
 <meta property="article:published_time" content="2023-04-06T13:56:48.966Z">
-<meta property="article:modified_time" content="2023-04-07T08:53:31.036Z">
+<meta property="article:modified_time" content="2023-04-08T05:07:15.297Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://pic.imgdb.cn/item/642ed570a682492fcc4a0356.png">
@@ -193,9 +193,16 @@
 <p>上图展示了共识的过程：</p>
 <p>​    1、pre-prepare阶段：b分片中的节点通过BFT协议实现跨分片块的共识，使用集体签名协议CoSi，该协议可以生成由分散的节点组共同签署的多重签名。具有三分之二超多数节点的集体签名的交叉分片块证明b分片在拜占庭环境下同意它。</p>
 <p>​    跨分片块还不能提交，因为相关i-shard中的节点不知道该块，也没有根据跨分片事务更新其本地状态。这样，具有B分片集体证明的跨分片块将被发送到关联i-shard的节点，即i-shard A和B。</p>
-<p>2.prepare阶段：每个ishard中的节点在收到b分片中带有集体证明的跨分片块后，可以根据身份区块链中记录的公钥验证集体签名。然后，每个相关的i-shard也可以通过集体签名对区块达成共识。在成功达成共识后，i-shard向b-shard发送一个Accept消息，包括头部的散列和一个集体签名。注意，Reject消息的条件是关于块之间的冲突，这将在章节IV-D中给出。</p>
+<p>2.prepare阶段：每个ishard中的节点在收到b分片中带有集体证明的跨分片块后，可以根据身份区块链（<strong>待</strong>）中记录的公钥验证集体签名。然后，每个相关的i-shard也可以通过集体签名对区块达成共识。在成功达成共识后，i-shard向b-shard发送一个Accept消息，包括头部的散列和一个集体签名。注意，Reject消息的条件是关于块之间的冲突，这将在章节IV-D中给出。</p>
 <p>3.commit阶段：在预准备阶段之后，b-shard中的节点用其相关的i-shard的数量初始化一个计数器。当b-shard中的节点从关联的i-shard接收到有效的Accept消息时，它将减少其本地计数器并将消息广播给bshard中的其他节点。当计数器等于0时，b分片中的节点可以确保跨分片块可以在本轮提交。</p>
 <p>​    <strong>与PBFT一样，区块准备阶段不足以保证区块提交[6]，因此需要额外的集体签名来保证跨分片的区块提交，并向相关的i-shard发送包含header散列和集体签名的Commit消息。</strong>（<strong>待</strong>）</p>
+<p><strong>transactions per second (TPS)</strong></p>
+<ul>
+<li>分析： 理论2的公式（待）  理论1中的两阶段提交</li>
+</ul>
+<p>1.集体签名：Enhancing Bitcoin Security and Performance with Strong Consistency via Collective Signing</p>
+<p>2.标识区块链： 搜一下吧 identify blockchain</p>
+<p>3.传递机制：Monoxide: Scale Out Blockchain with Asynchronous Consensus Zones</p>
 
       
     </div>
@@ -258,6 +265,10 @@
       <ul>
         
           <li>
+            <a href="/2023/04/08/11-20/mail/">使用SpringBoot发邮件</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/07/JAVA/JUC/">并发初级</a>
           </li>
         
@@ -271,10 +282,6 @@
         
           <li>
             <a href="/2023/04/06/Paper/BlockChain/">区块链</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/05/1-10/cache/">使用缓存</a>
           </li>
         
       </ul>
