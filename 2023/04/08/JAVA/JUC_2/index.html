@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>初级并发2 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="两阶段终止模式 12345678910111213141516171819202122232425262728293031323334353637383940@Slf4jpublic class Main &amp;#123;    public static void main(String[] args) throws InterruptedException &amp;#123;        TwoPha">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初级并发2">
+<meta property="og:url" content="http://example.com/2023/04/08/JAVA/JUC_2/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="两阶段终止模式 12345678910111213141516171819202122232425262728293031323334353637383940@Slf4jpublic class Main &amp;#123;    public static void main(String[] args) throws InterruptedException &amp;#123;        TwoPha">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.328888.xyz/2023/04/08/i3YIhV.png">
+<meta property="og:image" content="https://s1.ax1x.com/2023/04/09/ppbYwL9.png">
+<meta property="og:image" content="https://s1.ax1x.com/2023/04/09/ppbtfpT.png">
+<meta property="article:published_time" content="2023-04-08T07:32:05.185Z">
+<meta property="article:modified_time" content="2023-04-09T13:52:48.620Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.328888.xyz/2023/04/08/i3YIhV.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-JAVA/JUC_2" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/08/JAVA/JUC_2/" class="article-date">
+  <time datetime="2023-04-08T07:32:05.185Z" itemprop="datePublished">2023-04-08</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初级并发2
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="两阶段终止模式"><a href="#两阶段终止模式" class="headerlink" title="两阶段终止模式"></a>两阶段终止模式</h3><p><img src="https://i.328888.xyz/2023/04/08/i3YIhV.png" alt="image-20230408153303612"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">TwoPhaseTermination</span> <span class="variable">tpt</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TwoPhaseTermination</span>();</span><br><span class="line">        tpt.start();</span><br><span class="line">        Thread.sleep(<span class="number">3500</span>);</span><br><span class="line">        tpt.stop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">TwoPhaseTermination</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Thread monitor;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">start</span><span class="params">()</span>&#123;</span><br><span class="line">        monitor = <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">while</span>(<span class="literal">true</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span>(!currentThread().isInterrupted()) &#123;</span><br><span class="line">                    <span class="keyword">try</span> &#123;</span><br><span class="line">                        Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">                        log.debug(<span class="string">&quot;执行监控&quot;</span>);</span><br><span class="line">                    &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                        <span class="comment">//重新标记打断</span></span><br><span class="line">                        Thread.currentThread().interrupt();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                    log.debug(<span class="string">&quot;处理后事&quot;</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        monitor.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">stop</span><span class="params">()</span>&#123;</span><br><span class="line">        monitor.interrupt();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><p><code>LockSupport.park();</code> 会使得线程停下。然后使用interrupt()将park()打断，线程才会继续执行。并且打断park()之后的打断标记依旧存在，再次调用park()就无法停下，需要将打断标记置为false，这时候就需要使用<code>interrupted()</code>方法,既可以打断程序，又能清楚打断标记。</p>
+</li>
+<li><p>守护线程： （可参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/quanxiaoha/p/10731361.html%EF%BC%89">https://www.cnblogs.com/quanxiaoha/p/10731361.html）</a></p>
+</li>
+</ul>
+<ul>
+<li><p>Java中的6种状态： </p>
+<p><img src="https://s1.ax1x.com/2023/04/09/ppbYwL9.png" alt="ppbYwL9.png"></p>
+</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2023/04/09/ppbtfpT.png" alt="ppbtfpT.png"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/08/JAVA/JUC_2/" data-id="clg9ka58c0000y0u827af1pyb" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/04/09/JAVA/JUC_3/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          并发第四章
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/04/08/11-20/mail/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用SpringBoot发邮件</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/04/">April 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/04/09/11-20/error/">异常处理</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/09/11-20/logback/">日志配置（logback）</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/09/JAVA/JUC_3/">并发第四章</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/08/JAVA/JUC_2/">初级并发2</a>
+          </li>
+        
+          <li>
+            <a href="/2023/04/08/11-20/mail/">使用SpringBoot发邮件</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2023 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
