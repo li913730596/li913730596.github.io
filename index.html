@@ -204,7 +204,14 @@
 <ul>
 <li> 另外  <strong>final</strong>可用于声明<strong>属性、方法和类</strong>，分别表示<strong>属性不可变，方法不可重写，类不可继承</strong>。</li>
 </ul>
-
+<hr>
+<p>4.10</p>
+<ul>
+<li>不可变类 线程安全</li>
+<li>一些 包装类线程安全</li>
+</ul>
+<p>4.12</p>
+<h3 id="Monitor-锁-（监视器-管程）"><a href="#Monitor-锁-（监视器-管程）" class="headerlink" title="Monitor(锁)  （监视器/管程）"></a>Monitor(锁)  （监视器/管程）</h3>
       
     </div>
     <footer class="article-footer">
@@ -589,7 +596,7 @@
 <p>​    <strong>与PBFT一样，区块准备阶段不足以保证区块提交[6]，因此需要额外的集体签名来保证跨分片的区块提交，并向相关的i-shard发送包含header散列和集体签名的Commit消息。</strong>（<strong>待</strong>）</p>
 <p><strong>transactions per second (TPS)</strong></p>
 <ul>
-<li>分析： 理论2的公式（待）  理论1中的两阶段提交</li>
+<li>分析： 理论2的公式（待）  理论1中的两阶段提交（分布式系统中的事务提交）</li>
 </ul>
 <p>1.集体签名：Enhancing Bitcoin Security and Performance with Strong Consistency via Collective Signing</p>
 <p>2.标识区块链： 搜一下吧 identify blockchain  </p>
@@ -869,6 +876,51 @@
 <p>​    在比特币中采用了POW的基于工作量证明的共识机制。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.POW工作量证明机制提高了做叛徒（发布虚假区块）的成本，在工作量证明下，只有第一个完成证明的节点才能广播区块，竞争难度非常大，需要很高算例，如果不成功其算力就白白的耗费了（算力是需要成本的），如果有这样的算力作为诚实的节点，可以获得很大的收益（这就是矿工所作的工作），这也实际就不会有做叛徒的动机，整个系统也因此而更稳定。</span><br><span class="line">b.对于51%攻击问题，那更是提高了做叛徒的成本。拥有这么大的算力的，自然就是希望依赖比特币系统而盈利的，当然更不会造假而损坏自身利益。</span><br><span class="line">c.当然很多人批评POW工作量证明机制造成巨大的电力浪费，促使人们去探索新的解决一致性（共识）问题的机制：权益证明机制（POS : proof  of  Stake）是一个代表。在拜占庭将军问题的角度来看，它同样提高了做叛徒的成本，因为账户需要首先持有大量余额才能有更多的几率广播区块。如果已经拥有这么大的利益，当然更不会造假而损坏自身利益了。</span><br></pre></td></tr></table></figure>
 
+
+
+
+
+<hr>
+<h2 id="思想算法"><a href="#思想算法" class="headerlink" title="思想算法"></a>思想算法</h2><ul>
+<li><p>隔离见证技术（待补充）</p>
+</li>
+<li><h3 id="Bitcoin-NG-A-Scalable-Blockchain-Protocol"><a href="#Bitcoin-NG-A-Scalable-Blockchain-Protocol" class="headerlink" title="Bitcoin-NG: A Scalable Blockchain Protocol"></a>Bitcoin-NG: A Scalable Blockchain Protocol</h3></li>
+</ul>
+<p><strong>注意的是，比特币使用PoW的作用是选出具有打包资格的leader</strong>。我们发现，比特币的leader选举和区块的打包是一起完成的。每一次选举一个leader的同时才打包一次。我们思考，如果将这两个过程分开，让两者以不同的速率工作，比如10分钟一次leader选举，但每30秒打包一次，并且这期间所有的区块都由这个leader打包，这样是不是就可以提高系统的吞吐量了？这便是Bitcoin-NG的总体思路。</p>
+<ul>
+<li><h3 id="去中心化证人共同签名，让认证者诚信或被发现"><a href="#去中心化证人共同签名，让认证者诚信或被发现" class="headerlink" title="去中心化证人共同签名，让认证者诚信或被发现"></a>去中心化证人共同签名，让认证者诚信或被发现</h3></li>
+</ul>
+<p>leader在认证和签名每一个消息S（S也可以是一个命题）之前，都需要witness检查并签名一下，leader收集这些witness的签名，统一发给认证请求者。请求者通过认证各个witness的签名来确认结果的有效性。这里，“witness是否确定S是正确的”这个不重要，因为如果S是不正确的，那么意味着S同时也是黑客攻击行为已经被公之于众。</p>
+<ul>
+<li>CoSi集体签名</li>
+</ul>
+<p>每个见证者只是确保了消息的有效性，并不能确保消息的合法性、正确性（当然如果消息是不合法的就说明该网络已被黑客攻破）.</p>
+<p>将网络内部节点构造成一个K叉树，leader为树根,然后进行消息S的见证、签名加密和最终确认。</p>
+<p><img src="https://pic2.zhimg.com/80/v2-97b30e1a5d8ebdeccd34d98d97680b55_1440w.webp" alt="img"></p>
+<ul>
+<li><h3 id="Byzcoin，通过集体签名让比特币具有强一致性且强化安全"><a href="#Byzcoin，通过集体签名让比特币具有强一致性且强化安全" class="headerlink" title="Byzcoin，通过集体签名让比特币具有强一致性且强化安全"></a>Byzcoin，通过集体签名让比特币具有强一致性且强化安全</h3></li>
+</ul>
+<p>有一个PBFT网络，所有的交易都由这些节点认证和打包，然后追加到blockchain中。在每个epoch内部解决了Pow迷题的节点才可以加入PBFT网络，然后对交易进行打包认证。</p>
+<p>任何人都可以通过PoW方式挖矿，挖到矿之后，该矿工称为共识组成员，时间窗口往前移一个区块，意味着可能会有另一个矿工退出PBFT共识组。在一个时间窗口内，可能存在一个矿工多次成功挖矿的情况，这时候它就拿到多个share。每一次成功挖矿，所获得的奖励按照共识组内部矿工所持有的share的比例来分配。最新挖矿成功的矿工作为共识组的leader。</p>
+<p>PBFT的通信复杂为O( n2 )，认证的时间复杂度为O(n), 我们可以使用非对称加密算法签名的方式让通信时间复杂度由O( n2 )下降为O(n),进一步地，我们可以使用集体签名cosi协议让通信和认证过程的复杂度下降到O(1).</p>
+<blockquote>
+<p>ByzCoinX，所谓是byzcoin的改善版本，两者的区别是，前者是一个三层的树，第一层也就是leader，第二层是一个片的group中的一个组长，第三层就是该片的其它成员。后者是一个层数为log（k）的树，可以是二叉树。</p>
+</blockquote>
+<ul>
+<li>Omniledger</li>
+</ul>
+<p>客户端驱动跨分片交易机制：交易有客户端发起，相当于客户端管理整个交易个流程。客户端需要首相确认交易的有效性，向全网广播交易，相应委员会进行验证并返回相应，收到相应之后客户端才能提交。</p>
+<ul>
+<li>Rapidchain</li>
+</ul>
+<p>他们只需要把交易发送到任意委员会，然后交易会通过委员会间路由协议（inter-committee routing protocol）被路由到输出委员会。</p>
+<p>假设有一笔交易tx，这笔交易存在两个输入In1和In2和一个输出Out，且这两个输入和输出分别属于不同的分片委员会Shard1，2，3。那么<strong>输出委员会的Leader会创建三笔新的交易</strong>，分别如下：</p>
+<p>  ① Tx1把来自Shard1的Input转化成Shard3的Output。（相当于把Shard1里面的相应的钱转移到Shard3中）<br>  ② Tx2把来自Shard2的Input转化成Shard3的Output。（相当于把Shard2里面的相应的钱转移到Shard3中）<br>  ③ 通过以上两笔交易，现在所有的Input和Output都属于同一个分片了，接下来就创建一个交易Tx3，输入是Tx1和Tx2的输出，输出同原交易相同。</p>
+<p>输出委员会的Leader会通过委员会间路由协议把Tx1和Tx2分别发送给Shard1和Shard2。然后Shard1和Shard2的Leader会分别验证相应交易的有效性，如果有效，他们会分别把交易加入到本分片的账本中，并向Shard3做出回复。Shard3收到了所有输入委员会的回复后会把Tx3加入到自己的账本中。</p>
+<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/gaohaoyang0123/article/details/100158973">https://blog.csdn.net/gaohaoyang0123/article/details/100158973</a></p>
+<ul>
+<li>XBlock:<em>XBlock(xblock.pro)是一个旨在助力区块链良性发展和数据研究的数据集共享平台</em>。</li>
+</ul>
 
       
     </div>
