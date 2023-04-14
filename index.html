@@ -64,6 +64,334 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-JAVA/Springboot_Vue/mp代码生成器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/14/JAVA/Springboot_Vue/mp%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" class="article-date">
+  <time datetime="2023-04-14T02:55:06.407Z" itemprop="datePublished">2023-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/14/JAVA/Springboot_Vue/mp%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/">Springboot+Vue Blog</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Mybatis-Plus-代码生成器"><a href="#Mybatis-Plus-代码生成器" class="headerlink" title="Mybatis-Plus 代码生成器"></a>Mybatis-Plus 代码生成器</h3><ul>
+<li>第一步：引入依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.baomidou<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-plus-generator<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.5.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.freemarker<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>freemarker<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.3.31<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>第二部配置文件：</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AutoGenerator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">URL</span> <span class="operator">=</span> <span class="string">&quot;jdbc:mysql://localhost:3306/atguigu?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT%2B8&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">USERNAME</span> <span class="operator">=</span> <span class="string">&quot;root&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PASSWORD</span> <span class="operator">=</span> <span class="string">&quot;123456&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        List&lt;String&gt; tables = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"><span class="comment">//        tables.add(&quot;user&quot;);</span></span><br><span class="line">        tables.add(<span class="string">&quot;category&quot;</span>);</span><br><span class="line">        tables.add(<span class="string">&quot;article&quot;</span>);</span><br><span class="line"></span><br><span class="line">        FastAutoGenerator.create(URL, USERNAME, PASSWORD)</span><br><span class="line">                .globalConfig(builder -&gt; &#123;</span><br><span class="line">                    builder.author(<span class="string">&quot;代码奔腾&quot;</span>)               <span class="comment">//作者</span></span><br><span class="line">                            .outputDir(System.getProperty(<span class="string">&quot;user.dir&quot;</span>) + <span class="string">&quot;\\src\\main\\java&quot;</span>)    <span class="comment">//输出路径(写到java目录)</span></span><br><span class="line">                            .enableSwagger()           <span class="comment">//开启swagger</span></span><br><span class="line">                            .commentDate(<span class="string">&quot;yyyy-MM-dd&quot;</span>)</span><br><span class="line">                            .fileOverride();            <span class="comment">//开启覆盖之前生成的文件</span></span><br><span class="line"></span><br><span class="line">                &#125;)</span><br><span class="line">                .packageConfig(builder -&gt; &#123;</span><br><span class="line">                    builder.parent(<span class="string">&quot;com.example&quot;</span>)</span><br><span class="line">                            <span class="comment">//留空请求路径中就会少一个层级 原层级/blog//user 现层级/user</span></span><br><span class="line">                            .moduleName(<span class="string">&quot;&quot;</span>)</span><br><span class="line">                            .entity(<span class="string">&quot;entity&quot;</span>)</span><br><span class="line">                            .service(<span class="string">&quot;service&quot;</span>)</span><br><span class="line">                            .serviceImpl(<span class="string">&quot;serviceImpl&quot;</span>)</span><br><span class="line">                            .controller(<span class="string">&quot;controller&quot;</span>)</span><br><span class="line">                            .mapper(<span class="string">&quot;mapper&quot;</span>)</span><br><span class="line">                            .xml(<span class="string">&quot;mapper&quot;</span>)</span><br><span class="line">                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, System.getProperty(<span class="string">&quot;user.dir&quot;</span>) + <span class="string">&quot;\\src\\main\\resources\\mapper&quot;</span>));</span><br><span class="line">                &#125;)</span><br><span class="line">                .strategyConfig(builder -&gt; &#123;</span><br><span class="line">                    builder.addInclude(tables)</span><br><span class="line"><span class="comment">//                            .addTablePrefix(&quot;p_&quot;)</span></span><br><span class="line">                            .serviceBuilder()</span><br><span class="line">                            .formatServiceFileName(<span class="string">&quot;%sService&quot;</span>)</span><br><span class="line">                            .formatServiceImplFileName(<span class="string">&quot;%sServiceImpl&quot;</span>)</span><br><span class="line">                            .entityBuilder()</span><br><span class="line">                            .superClass(BaseEntity.class)</span><br><span class="line">                            <span class="comment">//开启Lombok，默认生成@Get，@Set，可以手动换成@Data</span></span><br><span class="line"><span class="comment">//                            .addTableFills(new Column(&quot;create_time&quot;, FieldFill.INSERT))</span></span><br><span class="line"><span class="comment">//                            .addTableFills(new Column(&quot;update_time&quot;, FieldFill.UPDATE))</span></span><br><span class="line">                            .enableLombok()</span><br><span class="line">                            .logicDeleteColumnName(<span class="string">&quot;deleted&quot;</span>)</span><br><span class="line">                            .enableTableFieldAnnotation()</span><br><span class="line">                            .controllerBuilder()</span><br><span class="line">                            <span class="comment">//如果没有父类请注释掉</span></span><br><span class="line">                            .superClass(BaseController.class)</span><br><span class="line">                            .formatFileName(<span class="string">&quot;%sController&quot;</span>)</span><br><span class="line">                            .enableRestStyle()</span><br><span class="line">                            .mapperBuilder()</span><br><span class="line">                            .enableBaseResultMap()  <span class="comment">//生成通用的resultMap</span></span><br><span class="line">                            .superClass(BaseMapper.class)</span><br><span class="line">                            .formatMapperFileName(<span class="string">&quot;%sMapper&quot;</span>)</span><br><span class="line">                            .enableMapperAnnotation()</span><br><span class="line">                            .formatXmlFileName(<span class="string">&quot;%sMapper&quot;</span>);</span><br><span class="line">                &#125;)</span><br><span class="line"></span><br><span class="line">                .templateEngine(<span class="keyword">new</span> <span class="title class_">FreemarkerTemplateEngine</span>()) <span class="comment">// 使用Freemarker引擎模板，默认的是Velocity引擎模板</span></span><br><span class="line">                .execute();</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>详情可见：<a target="_blank" rel="noopener" href="https://baomidou.com/pages/981406/">https://baomidou.com/pages/981406/</a></p>
+<h3 id="设置统一的返回类型"><a href="#设置统一的返回类型" class="headerlink" title="设置统一的返回类型"></a>设置统一的返回类型</h3><p>新建文件夹common 创建Result   (<strong>涉及到了泛型方法和泛型类</strong>)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@AllArgsConstructor</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Result</span>&lt;T&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String msg;</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line">    <span class="keyword">private</span> T data;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Result&lt;T&gt; <span class="title function_">success</span><span class="params">()</span>&#123;	</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>(<span class="string">&quot;操作成功&quot;</span>, <span class="number">200</span>, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Result&lt;T&gt; <span class="title function_">success</span><span class="params">(T data)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>(<span class="string">&quot;操作成功&quot;</span>,<span class="number">200</span>,data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Result&lt;T&gt; <span class="title function_">error</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>&lt;&gt;(<span class="string">&quot;操作失败&quot;</span>, <span class="number">500</span>, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Result&lt;T&gt; <span class="title function_">error</span><span class="params">(T data)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>&lt;&gt;(<span class="string">&quot;操作失败&quot;</span>, <span class="number">500</span>, data);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; Result&lt;T&gt; <span class="title function_">error</span><span class="params">(Integer code)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Result</span>&lt;&gt;(<span class="string">&quot;操作失败,请联系管理员&quot;</span>, code, <span class="literal">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="进行分页查询、模糊查询"><a href="#进行分页查询、模糊查询" class="headerlink" title="进行分页查询、模糊查询"></a>进行分页查询、模糊查询</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result&lt;Page&gt; <span class="title function_">test</span><span class="params">()</span>&#123;</span><br><span class="line">        LambdaQueryWrapper&lt;Article&gt; queryWrapper = <span class="keyword">new</span> <span class="title class_">LambdaQueryWrapper</span>&lt;&gt;();</span><br><span class="line">        <span class="type">String</span> <span class="variable">content</span> <span class="operator">=</span> <span class="string">&quot;%o&quot;</span>;</span><br><span class="line">        queryWrapper.like(content != <span class="literal">null</span>, Article::getContent,content);</span><br><span class="line">        <span class="type">Page</span> <span class="variable">page</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Page</span>(<span class="number">1</span>,<span class="number">2</span>);</span><br><span class="line">        articleService.page(page,queryWrapper);</span><br><span class="line">        <span class="keyword">return</span> Result.success(page);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="Mybatis-Plus-自动填充"><a href="#Mybatis-Plus-自动填充" class="headerlink" title="Mybatis-Plus 自动填充"></a>Mybatis-Plus 自动填充</h3><ul>
+<li>第一步创建一个配置文件，该文件可以在数据库CRUD之前拦截操作，进行自动填充。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MyMetaObjectHandler</span> <span class="keyword">implements</span> <span class="title class_">MetaObjectHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insertFill</span><span class="params">(MetaObject metaObject)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;start insert fill ....&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.strictInsertFill(metaObject, <span class="string">&quot;createTime&quot;</span>, LocalDateTime.class, LocalDateTime.now()); <span class="comment">// 起始版本 3.3.0(推荐使用)</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment">//或者根据项目时间的类型进行如下修改</span></span><br><span class="line">         <span class="built_in">this</span>.strictInsertFill(metaObject, <span class="string">&quot;createTime&quot;</span>, Date.class, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">updateFill</span><span class="params">(MetaObject metaObject)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;start update fill ....&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.strictUpdateFill(metaObject, <span class="string">&quot;updateTime&quot;</span>, LocalDateTime.class, LocalDateTime.now()); <span class="comment">// 起始版本 3.3.0(推荐)</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">        <span class="comment">//或者根据项目时间的类型进行如下修改</span></span><br><span class="line">         <span class="built_in">this</span>.strictInsertFill(metaObject, <span class="string">&quot;createTime&quot;</span>, Date.class, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>第二步在需要自动填充的属性上面加上注解<code>@TableField(value = &quot;create_time&quot;, fill = FieldFill.INSERT)</code>,<code>@TableField(value = &quot;update_time&quot;, fill = FieldFill.UPDATE)</code>这样类型的。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">   <span class="meta">@TableField(value = &quot;create_time&quot;, fill = FieldFill.INSERT)</span>  </span><br><span class="line"><span class="comment">//@TableField（value = &quot;email&quot;）//指定数据库表中字段名</span></span><br><span class="line">   <span class="keyword">private</span> Date createTime;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">   <span class="meta">@TableField(value = &quot;update_time&quot;, fill = FieldFill.UPDATE)</span></span><br><span class="line">   <span class="keyword">private</span> Date updateTime;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>参考文档：<a target="_blank" rel="noopener" href="https://baomidou.com/pages/4c6bcf/">https://baomidou.com/pages/4c6bcf/</a></p>
+<h3 id="自定义异常，全局异常捕获"><a href="#自定义异常，全局异常捕获" class="headerlink" title="自定义异常，全局异常捕获"></a>自定义异常，全局异常捕获</h3><ul>
+<li>一个注解<code>@ControllerAdvice</code></li>
+</ul>
+<p>​    顾名思义，@ControllerAdvice就是@Controller 的增强版。@ControllerAdvice主要用来处理全局数据，一般搭配@<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=ExceptionHandler&spm=1001.2101.3001.7020">ExceptionHandler</a>、@ModelAttribute以及@InitBinder使用。</p>
+<p>​    @ControllerAdvice最常见的使用场景就是全局异常处理。</p>
+<ul>
+<li>首先可以创建一个全局异常处理器</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">       <span class="meta">@ExceptionHandler(RuntimeException.class)</span></span><br><span class="line">       <span class="meta">@ResponseBody</span></span><br><span class="line">       <span class="keyword">public</span> Result&lt;Exception&gt; <span class="title function_">exceptionHandler</span><span class="params">()</span>&#123;</span><br><span class="line">           <span class="keyword">return</span> Result.error();</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后可以自定义个异常类型处理类</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CustomerException</span> <span class="keyword">extends</span> <span class="title class_">RuntimeException</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer code;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">CustomerException</span><span class="params">(String msg, Integer code)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(msg);</span><br><span class="line">        <span class="built_in">this</span>.code = code;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">CustomerException</span><span class="params">(String msg)</span> &#123;</span><br><span class="line">        <span class="built_in">super</span>(msg);</span><br><span class="line">        <span class="built_in">this</span>.code = <span class="number">500</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>然后可以将这个自定义异常类添加到（全区捕获器）全局异常处理器 中</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ControllerAdvice</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">GlobalExceptionHandler</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(RuntimeException.class)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> Result&lt;Exception&gt; <span class="title function_">exceptionHandler</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExceptionHandler(CustomerException.class)</span></span><br><span class="line">    <span class="meta">@ResponseBody</span></span><br><span class="line">    <span class="keyword">public</span> Result&lt;String&gt; <span class="title function_">exceptionHandlerResult</span><span class="params">(CustomerExceptionHandler e)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> Result.error(e.getMessage(), e.getCode());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这个时候就可以捕获到<code>RuntimeException</code>以及<code>CustomerException</code>这两种类型的异常然后进行自定义的处理。</p>
+<h3 id="利用Mybatis-Plus-添加枚举类型"><a href="#利用Mybatis-Plus-添加枚举类型" class="headerlink" title="利用Mybatis-Plus 添加枚举类型"></a>利用Mybatis-Plus 添加枚举类型</h3><ul>
+<li>首先创建一个枚举类型</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">StatusType</span> &#123;</span><br><span class="line"></span><br><span class="line">    NO(<span class="number">0</span>,<span class="string">&quot;禁用&quot;</span>),</span><br><span class="line">    YES(<span class="number">1</span>, <span class="string">&quot;启用&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * key值存在数据库</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@EnumValue</span></span><br><span class="line">    <span class="keyword">private</span> Integer key;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * name值显示在前端</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@JsonValue</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    StatusType(Integer key, String name) &#123;</span><br><span class="line">        <span class="built_in">this</span>.key = key;</span><br><span class="line">        <span class="built_in">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>然后开启Mybatis-Plus的配置</li>
+</ul>
+<p><strong>！ 注意!! 从 3.5.2 开始无需配置</strong></p>
+<p>之前的配置：</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">mybatis-plus:</span></span><br><span class="line">    <span class="comment"># 支持统配符 * 或者 ; 分割</span></span><br><span class="line">    <span class="attr">typeEnumsPackage:</span> <span class="string">com.baomidou.springboot.entity.enums</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="使用Vaildated-进行参数校验"><a href="#使用Vaildated-进行参数校验" class="headerlink" title="使用Vaildated 进行参数校验"></a>使用Vaildated 进行参数校验</h3><ul>
+<li>第一步引入依赖：</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-validation<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第二步在后端属性部分进行校验</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotBlank(message = &quot;用户名不能为空&quot;)</span></span><br><span class="line">   <span class="meta">@Length(min = 6, max = 50)</span></span><br><span class="line"><span class="comment">//上面两个都属于vaildation内容</span></span><br><span class="line">   <span class="meta">@TableField(&quot;username&quot;)</span></span><br><span class="line">   <span class="keyword">private</span> String username;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>第三步在controller层的接收参数部分进行校验：(在参数部分添加 <code>@Validated</code>注解)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Result&lt;Page&gt; <span class="title function_">add</span><span class="params">(<span class="meta">@Validated</span> <span class="meta">@RequestBody</span> User user)</span>&#123;</span><br><span class="line">           ......</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><u>! 注意在引入新的依赖之后需要进行重启，此时只进行热部署新依赖不会生效。</u></p>
+<ul>
+<li>第四步，根据上面全局异常捕获处理的方法，在全局异常捕获器中进行处理(首先找他的错误类型)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ExceptionHandler(MethodArgumentNotValidException.class)</span></span><br><span class="line">   <span class="meta">@ResponseBody</span></span><br><span class="line">   <span class="keyword">public</span> Result&lt;String&gt; <span class="title function_">execeptionMethodArgumentNotValid</span><span class="params">(MethodArgumentNotValidException e)</span>&#123;</span><br><span class="line">       List&lt;FieldError&gt; allErrors = e.getBindingResult().getFieldErrors();</span><br><span class="line">       <span class="type">String</span> <span class="variable">defaultMessage</span> <span class="operator">=</span> allErrors.get(<span class="number">0</span>).getDefaultMessage();</span><br><span class="line">       <span class="keyword">return</span> Result.error(defaultMessage);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>另外，如果想自定义异常的message可以在注解中进行自定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@NotBlank(message = &quot;用户名不能为空&quot;)</span></span><br><span class="line"><span class="meta">@Length(min = 6, max = 50, message = &quot;长度范围：【6，50】&quot;)</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="跨域问题"><a href="#跨域问题" class="headerlink" title="跨域问题"></a>跨域问题</h3><p>具体详情看：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_38128179/article/details/84956552?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522168145726316800211591638%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=168145726316800211591638&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~hot_rank-1-84956552-null-null.142">https://blog.csdn.net/qq_38128179/article/details/84956552?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522168145726316800211591638%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&amp;request_id=168145726316800211591638&amp;biz_id=0&amp;utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~hot_rank-1-84956552-null-null.142</a></p>
+<p>本项目采用前后端分离模式，前后端不在同一个域，会产生跨域的情况，所以需要进行配置，使得可以跨域访问资源。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/14/JAVA/Springboot_Vue/mp%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/" data-id="clgg8v7080003mou85uwy8bkx" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-11-20/swagger" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/14/11-20/swagger/" class="article-date">
+  <time datetime="2023-04-14T02:08:02.152Z" itemprop="datePublished">2023-04-14</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/14/11-20/swagger/">Swagger监控程序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>第一步：引入依赖</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.springfox<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>springfox-swagger-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line">      <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.xiaoymin<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>swagger-bootstrap-ui<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">          <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>第二步：创建一个Swagger配置类(注意<code>@EnableSwagger2</code>注解)</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableSwagger2</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SwaggerConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> Docket <span class="title function_">docket</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Docket</span>(DocumentationType.SWAGGER_2)</span><br><span class="line">                .select()</span><br><span class="line">                .apis(RequestHandlerSelectors.basePackage(<span class="string">&quot;com.example.controller&quot;</span>))</span><br><span class="line">                .paths(PathSelectors.any())</span><br><span class="line">                .build().apiInfo(<span class="keyword">new</span> <span class="title class_">ApiInfoBuilder</span>().title(<span class="string">&quot;SpringBoot+Vue实现前后端分离博客系统&quot;</span>).version(<span class="string">&quot;v1.0&quot;</span>).build());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li>第三步：加上需要的注解</li>
+</ul>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">@Api：修饰整个类，描述Controller的作用；</span><br><span class="line"></span><br><span class="line">@ApiOperation：描述一个类的一个方法，或者说一个接口；</span><br><span class="line"></span><br><span class="line">@ApiParam：单个参数描述；</span><br><span class="line"></span><br><span class="line">@ApiModel：用对象来接收参数；</span><br><span class="line"></span><br><span class="line">@ApiProperty：用对象接收参数时，描述对象的一个字段；</span><br><span class="line"></span><br><span class="line">@ApiResponse：HTTP响应其中1个描述；</span><br><span class="line"></span><br><span class="line">@ApiResponses：HTTP响应整体描述；</span><br><span class="line"></span><br><span class="line">@ApiIgnore：使用该注解忽略这个API；</span><br><span class="line"></span><br><span class="line">@ApiError ：发生错误返回的信息；</span><br><span class="line"></span><br><span class="line">@ApiImplicitParam：一个请求参数；</span><br><span class="line"></span><br><span class="line">@ApiImplicitParams：多个请求参数。</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/14/11-20/swagger/" data-id="clgg8v7080004mou8eebqb4da" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-11-20/devtool" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/13/11-20/devtool/" class="article-date">
+  <time datetime="2023-04-13T11:49:25.941Z" itemprop="datePublished">2023-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="title：-热部署"><a href="#title：-热部署" class="headerlink" title="title： 热部署"></a>title： 热部署</h2><ul>
+<li>导入依赖和插件</li>
+</ul>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-devtools<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">optional</span>&gt;</span>true<span class="tag">&lt;/<span class="name">optional</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="tag">&lt;<span class="name">build</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">         <span class="tag">&lt;<span class="name">plugin</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-maven-plugin<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">fork</span>&gt;</span>true<span class="tag">&lt;/<span class="name">fork</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">build</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>修改编译器的配置</li>
+</ul>
+<p><img src="https://s1.ax1x.com/2023/04/13/ppxdlXn.png" alt="ppxdlXn.png"></p>
+<p>然后点击下图，即可完成热部署。</p>
+<p><img src="https://s1.ax1x.com/2023/04/13/ppxdG7V.png" alt="image-20230413195603764"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/13/11-20/devtool/" data-id="clgg8v7040001mou836l52bk6" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-project1" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/13/project1/" class="article-date">
+  <time datetime="2023-04-13T11:49:04.830Z" itemprop="datePublished">2023-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/13/project1/" data-id="clgg8v7000000mou81dzj0o8a" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-11-20/filterandIntercepter" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/13/11-20/filterandIntercepter/" class="article-date">
+  <time datetime="2023-04-13T07:17:10.487Z" itemprop="datePublished">2023-04-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/13/11-20/filterandIntercepter/">Filter(过滤器)和Interceptor（拦截器）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="Filter（只用在Web程序）"><a href="#Filter（只用在Web程序）" class="headerlink" title="Filter（只用在Web程序）"></a>Filter（只用在Web程序）</h3><ul>
+<li>filter是servlet里的配置，与springMVC框架无关，他会从servlet服务启动开始时就进行初始化。</li>
+</ul>
+<ul>
+<li>构建一个自定义的Filter需要实现Filter接口中的三个方法。 （<strong>实现Filter接口</strong>）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@WebFilter(urlPatterns = &#123;&quot;/*&quot;&#125;)</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TimeFilter</span> <span class="keyword">implements</span> <span class="title class_">Filter</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">(FilterConfig filterConfig)</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;过滤器初始化&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;过滤之前&quot;</span>);</span><br><span class="line">        <span class="type">Long</span> <span class="variable">start</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Date</span>().getTime();</span><br><span class="line">        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">        System.out.println(<span class="string">&quot;过滤结束，用时： &quot;</span> + (<span class="keyword">new</span> <span class="title class_">Date</span>().getTime() - start));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;过滤器销毁&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>将自定义的Filter加入系统有两种方式：</p>
+<p>1.如上图所示在自定义类上添加注解：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">@WebFilter(urlPatterns = &#123;&quot;/*&quot;&#125;)</span><br><span class="line">@Component</span><br><span class="line">public class TimeFilter implements Filter &#123;</span><br><span class="line">***</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>2.添加一个配置类，将自定义类注册为Bean。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">WebConfig</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> FilterRegistrationBean <span class="title function_">timeFilter</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">FilterRegistrationBean</span> <span class="variable">filterRegistrationBean</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">FilterRegistrationBean</span>();</span><br><span class="line">        <span class="type">TimeFilter</span> <span class="variable">timeFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">TimeFilter</span>();</span><br><span class="line">        filterRegistrationBean.setFilter(timeFilter);</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; urlList = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line">        urlList.add(<span class="string">&quot;/*&quot;</span>);</span><br><span class="line"></span><br><span class="line">        filterRegistrationBean.setUrlPatterns(urlList);</span><br><span class="line">        <span class="keyword">return</span> filterRegistrationBean;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="Interceptor（用于Spring框架）"><a href="#Interceptor（用于Spring框架）" class="headerlink" title="Interceptor（用于Spring框架）"></a>Interceptor（用于Spring框架）</h2><ul>
+<li>这是SpringMVC的东西，它的范围要比Filter小。并且它是基于Java反射机制的，可以获取方法的相关信息。</li>
+<li>实现一个自定义的拦截器，需要实现<strong>HandlerInterceptor接口</strong></li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/13/11-20/filterandIntercepter/" data-id="clgg8v7070002mou89dfo1bg7" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-11-20/error" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/09/11-20/error/" class="article-date">
@@ -211,7 +539,10 @@
 <li>一些 包装类线程安全</li>
 </ul>
 <p>4.12</p>
-<h3 id="Monitor-锁-（监视器-管程）"><a href="#Monitor-锁-（监视器-管程）" class="headerlink" title="Monitor(锁)  （监视器/管程）"></a>Monitor(锁)  （监视器/管程）</h3>
+<h3 id="Monitor-锁-（监视器-管程）"><a href="#Monitor-锁-（监视器-管程）" class="headerlink" title="Monitor(锁)  （监视器/管程）"></a>Monitor(锁)  （监视器/管程）</h3><ul>
+<li>轻量级锁</li>
+</ul>
+
       
     </div>
     <footer class="article-footer">
@@ -376,621 +707,11 @@
 
 
   
-    <article id="post-JAVA/JUC" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/07/JAVA/JUC/" class="article-date">
-  <time datetime="2023-04-07T07:13:36.860Z" itemprop="datePublished">2023-04-07</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/07/JAVA/JUC/">并发初级</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="4-7"><a href="#4-7" class="headerlink" title="4.7"></a>4.7</h3><p>并发 (deal)  并行（do）</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> &#123;</span><br><span class="line">    </span><br><span class="line">    	<span class="comment">//方法一</span></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>()&#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>&#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        thread.setName(<span class="string">&quot;t1&quot;</span>);</span><br><span class="line">        thread.start();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//方法一的简化：利用lamaba</span></span><br><span class="line">        <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; log.info(<span class="string">&quot;inThread&quot;</span>)).start();</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">		<span class="comment">//方法二：利用Runnable接口</span></span><br><span class="line">        <span class="type">Runnable</span> <span class="variable">inThread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Runnable</span>() &#123;</span><br><span class="line"></span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread1</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(inThread, <span class="string">&quot;t2&quot;</span>);</span><br><span class="line">        thread1.start();</span><br><span class="line"></span><br><span class="line">        log.info(<span class="string">&quot;outThread&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<ul>
-<li>针对Runnable 接口  和  Thread直接创建这两种方式， 推荐使用Runnable接口的实现，这样就可以将我们创建的任务与Thread类分离开。</li>
-</ul>
-<ul>
-<li>第三种创建线程的方式：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">contextLoads</span><span class="params">()</span> <span class="keyword">throws</span> ExecutionException, InterruptedException &#123;</span><br><span class="line">        FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> <span class="title class_">FutureTask</span>&lt;&gt;(<span class="keyword">new</span> <span class="title class_">Callable</span>&lt;Integer&gt;() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> Integer <span class="title function_">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">                log.info(<span class="string">&quot;inThread&quot;</span>);</span><br><span class="line">                Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">                <span class="keyword">return</span> <span class="number">100</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(futureTask,<span class="string">&quot;t3&quot;</span>);</span><br><span class="line">        thread.start();</span><br><span class="line">        System.out.println(futureTask.get());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">-----------</span><br><span class="line">结果：</span><br><span class="line"><span class="number">2023</span>-<span class="number">04</span>-<span class="number">07</span> <span class="number">16</span>:<span class="number">05</span>:<span class="number">25.435</span>  INFO <span class="number">4032</span> --- [  t3] com.example.Jucday01ApplicationTests     : inThread</span><br><span class="line"><span class="number">100</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p><img src="https://pic.imgdb.cn/item/642fcdc7a682492fcc520dff.png" alt="image-20230407160047480"></p>
-<p><img src="https://pic.imgdb.cn/item/642fd047a682492fcc559865.png" alt="image-20230407161142009"></p>
-<p>​        <strong>本质上还是继承了Runnable,只不过为了能够得到线程中任务的返回值，需要传入一个Callable接口的参数，这个接口下的call方法是有返回值的。 同时又因为，FutureTask继承了Future接口 所以可以用get()方法获取call方法的返回值。</strong></p>
-<ul>
-<li>线程上下文切换：cpu不再执行当前的线程，转而执行另一个线程。每次切换线程时，操作系统都需要记录线程当前的状态（记录现场）    </li>
-</ul>
-<p><img src="https://pic.imgdb.cn/item/642fff96a682492fcccca49d.png" alt="image-20230407193313881"></p>
-<ul>
-<li>栈帧：每多开一个线程，jvm都会给它开辟一块栈空间，叫做栈帧。</li>
-</ul>
-<h3 id="4-8"><a href="#4-8" class="headerlink" title="4.8"></a>4.8</h3><ul>
-<li>常用方法</li>
-</ul>
-<hr>
-<p>join()        等待线程运行结束  ；  join(n)  最多等n毫秒；</p>
-<p>getState()  获取线程状态；</p>
-<p>isInterrupted() 判断是否打断；</p>
-<p>isAlive()  判断线程是否存活；</p>
-<p>currentThread()   获取当前线程；</p>
-<p>sleep(n)      休眠n毫秒，让出cpu（但不释放锁）</p>
-<p>yeild()            让出cpu  (测试和调试)</p>
-<hr>
-<h5 id="run-与-start"><a href="#run-与-start" class="headerlink" title="run()  与 start()"></a>run()  与 start()</h5><p>直接调用run()方法并不会开启新线程。</p>
-<p>使用start() 开启新线程，然后由新线程去执行run()。</p>
-<hr>
-<p>sleep()  RUNNABLE  转换为  TIME_WAITING（<strong>阻塞态</strong>）</p>
-<p><u>TimeUnit.时间单位.sleep(n);  可读性更强。</u></p>
-<p><u>使用sleep或者yield让出cpu 防止cpu占到100%</u></p>
-<p>interrupt()  打断线程睡眠</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(<span class="string">&quot;t1&quot;</span>) &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span> &#123;</span><br><span class="line">                log.debug(<span class="string">&quot;sleep &#123;&#125;&quot;</span>, currentThread().getName());</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    Thread.sleep(<span class="number">2000</span>);</span><br><span class="line">                &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">                    log.debug(<span class="string">&quot;interrupt&quot;</span>);</span><br><span class="line">                    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(e);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        thread.start();</span><br><span class="line"></span><br><span class="line">        Thread.sleep(<span class="number">500</span>);</span><br><span class="line"></span><br><span class="line">        thread.interrupt();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<hr>
-<p>yield 会使线程从 Running -&gt; Runnable<strong>就绪状态</strong></p>
-<hr>
-<p>使用join进行线程同步。<code>t1.join()</code>主线程等待t1线程结束后再继续执行。</p>
-<hr>
-<p>使用interrupt()打断线程，可以通过thread.isInterrupted（）来判断是否被打断。</p>
-<ul>
-<li>当线程处于睡眠、等待状态被打断时就会将打断状态清空。</li>
-<li>正常线程被打断，打断状态不会清空。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/07/JAVA/JUC/" data-id="clg69u26d000ai4u8hzefa18u" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Paper/Pyramid" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/06/Paper/Pyramid/" class="article-date">
-  <time datetime="2023-04-06T13:56:48.966Z" itemprop="datePublished">2023-04-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/06/Paper/Pyramid/">“分层分片区块链系统--金字塔 Pyramid：A Layered Sharding Blockchain System”</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>​    在本文中，我们提出了金字塔，第一层分片区块链系统。</p>
-<p>​    其中一些分片可以存储多个分片的完整记录，从而可以在这些分片内部处理和验证跨分片交易。在提交跨分片事务时，为了实现相关分片之间的一致性，提出了基于多个分片之间协作的分层分片共识。</p>
-<p>​    相比于完整分片，每个跨分片事务被分割成多个子事务，需要多轮共识提交，分层分片共识可以在一轮提交跨分片事务。</p>
-<p>分片的主要思想:    主要思想是将节点划分为称为碎片的小组，可以并行处理事务。</p>
-<p><img src="https://pic.imgdb.cn/item/642ed570a682492fcc4a0356.png" alt="5b322fe30b697758fe5f0685d88c4264_0_Figure_1_1546720846"></p>
-<p>如上图所示，本文将b部分的完全分叉，变成了c部分的不完全分叉，存在交叉重合的部分（这些重合节点包含两个分片的所有信息）。</p>
-<p>本文挑战：</p>
-<ul>
-<li>第一个挑战是关于共识协议设计，它指定了如何生成块以及如何验证块。现有的分片系统在每个分片中采用工作量证明(PoW)或基于拜占庭的区块提议方案。由于完全共享，分片可以独立地验证它们的块。然而，金字塔中的一些分片负责生成跨分片交易的区块。生成的块需要发送到相应的分片进行承诺，这使得共识协议设计更具挑战性。</li>
-<li>第二个挑战是关于分片的构建，即需要多少个分片，哪些节点应该分配给哪些分片。不同于传统的分片方案，所有的分片都有相同的角色，金字塔中的分片扮演不同的角色。一些分片负责内部事务，而另一些则应该处理跨分片事务。对于金字塔系统，分片分配的研究至关重要，它决定了系统的吞吐量和安全水平。</li>
-</ul>
-<p>本文贡献：</p>
-<ul>
-<li>分层分片架构:我们介绍了分层分片的形成过程。通过我们的跨分片区块设计，跨分片交易可以被包含在一个区块中，以达成共识。</li>
-<li>分层分片共识:我们提出了一种分层分片共识协议，根据不同分片中节点之间的协作，在每个分片中提交跨分片块。与将跨分片事务拆分为多个子事务并在多个共识轮中处理的完整分片相比，我们的分层分片共识可以在一轮中提交每个跨分片事务，从而提高了分片性能。</li>
-<li>理论分析:从安全性、可扩展性、性能等方面对不同分片结构的Pyramid进行了理论分析，并将其与考虑多步事务分布的非分片和完整分片系统进行了比较。</li>
-<li>系统实施:我们为金字塔开发了一个原型，并通过将其与两个最先进的完整分片系统进行比较来评估其性能。结果表明，在一个有17个分片、3500个节点的系统中，金字塔分片与完全分片相比，事务吞吐量提高了2.95倍。</li>
-</ul>
-<p>区块链分片的发展：</p>
-<ul>
-<li><p>不分片时期：</p>
-<blockquote>
-<p>而非分片系统的共识涉及到系统中的所有节点，这意味着每个节点都需要验证和存储系统中发生的所有事务，每个共识消息都需要在全网广播。这导致非分片系统的可伸缩性较差。</p>
-</blockquote>
-</li>
-<li><p>部分分片系统：</p>
-</li>
-</ul>
-<blockquote>
-<p>ELASTICO实现了事务计算的分片，但它没有实现系统中存储和通信的分片，因此ELASTICO被称为部分分片系统。由于每个节点接收和存储系统的完整信息，系统中不存在跨分片的事务，但节点仍有较大的存储和带宽开销。</p>
-</blockquote>
-<ul>
-<li>完全分片</li>
-</ul>
-<blockquote>
-<p>omniedger[8]是第一个基于分片实现全分片的区块链系统。系统采用客户端驱动机制提交跨分片事务。然后，提出了另一个客户端驱动的分片系统Chainspace[11]，以支持通用智能合约的分片</p>
-</blockquote>
-<h4 id="系统和威胁模型"><a href="#系统和威胁模型" class="headerlink" title="系统和威胁模型"></a>系统和威胁模型</h4><ul>
-<li><p>系统模型</p>
-<p>系统有N个节点和S个分片，shard可分成两种类型：i-shard 和 b-shard。</p>
-<p>i-shard: 与完整分片方案中的shard一致，只处理本分片内部的交易。</p>
-<p>b-shard：它也可以处理分片内部的交易，同时他也承担了跨分片交易的处理。这种类型的节点通过处理与i-shard相关的跨shard事务来桥接多个i-shard的节点。</p>
-<p>本文的Pyramid模型采用了账户/余额的形式。</p>
-</li>
-<li><p>威胁模型</p>
-</li>
-</ul>
-<p>​        金字塔（Pyramid）中包含诚实节点和恶意节点。这里假设拜占庭对手是缓慢自适应的，恶意节点和诚实结点的集合在每个时代（epoch）都是固定的，只能在时代之间改变。</p>
-<h4 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h4><ul>
-<li><p>分层分片形成</p>
-<ul>
-<li><p>随机生成</p>
-<blockquote>
-<p>在每个epoch的开始都需要生成一个随机性（<strong>待</strong>）</p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li><p>节点加入epoch </p>
-<blockquote>
-<p>​      首先节点要根据epoch的随机性来解决一个pow谜题。 解决之后再将谜题的解记录到 标识区块链（<strong>待</strong>）中，注册其标识。</p>
-<p>​      PoW谜题在每个epoch的难度可以根据上一个epoch的身份数量进行调整，以保持节点数量的稳定。如果上一纪元的nidentity多于上一纪元的，那么这一纪元的难度就会增加，否则难度就会降低。</p>
-</blockquote>
-</li>
-<li><p>Assignment（任务）</p>
-</li>
-</ul>
-<blockquote>
-<p>每个被接纳的节点根据节点的身份和纪元中生成的随机性随机分配一个分片ID。shard ID分为i-shard ID和b-shard ID两种，每个b-shard ID对应若干个i-shard ID。</p>
-</blockquote>
-<ul>
-<li><p>跨分片区块设计</p>
-<ul>
-<li><p>有效性验证</p>
-<blockquote>
-<p>​    每个交易的有效性可以分为源有效性和结果有效性。</p>
-<p>​    源有效性表示发送方的状态满足交易的条件，即发送方有足够的资金;结果有效性表示接收方的状态符合交易的运行结果，即接收方收到了适当的资金。只有具有上述两种有效性的事务才被认为是有效的。</p>
-<p>​    完整分片处理跨分片事务，需要分成3个子事务，2个内部事务和1个中继事务。</p>
-</blockquote>
-</li>
-<li><p>区块设计</p>
-<blockquote>
-<p>​    每个分片（shard）都有自己的区块链。同时每个i-shard都会存一个区块链，而b-shard节点除了存储自己的区块链之外还会存储所有与其桥接的i-shard的区块链。</p>
-</blockquote>
-<p> 组成：每个跨分片的区块，都由块头和块体组成，如下图</p>
-<p><img src="https://pic.imgdb.cn/item/642f8b6fa682492fccf8cf36.png" alt="image-20230407111739685"></p>
-<p>​                header包括了与跨片交易相关的i-shard中的父块的散列以及body的Merkle树根。</p>
-<p>​                body部分包括涉及到的分片交易，以及个分片中节点对应的账户状态。 </p>
-</li>
-<li><p>分层分片共识</p>
-<p>每个epoch都要进行多轮共识，每轮共识都会根据epoch的随机性选择一个领导者。  </p>
-<p>​    i-shard中的领导者 以提出一个包含其内部交易的区块，相应的共识过程类似于传统的完整分片系统（<strong>待</strong>）</p>
-<p>​    b-shard的领导者可以提出一个包含其内部事务的块或与多个ishard关联的跨分片块。</p>
-</li>
-</ul>
-</li>
-</ul>
-<p>​    <img src="https://pic.imgdb.cn/item/642f8ffca682492fccfe5bef.png"></p>
-<p>上图展示了共识的过程：</p>
-<p>​    1、pre-prepare阶段：b分片中的节点通过BFT协议实现跨分片块的共识，使用集体签名协议CoSi，该协议可以生成由分散的节点组共同签署的多重签名。具有三分之二超多数节点的集体签名的交叉分片块证明b分片在拜占庭环境下同意它。</p>
-<p>​    跨分片块还不能提交，因为相关i-shard中的节点不知道该块，也没有根据跨分片事务更新其本地状态。这样，具有B分片集体证明的跨分片块将被发送到关联i-shard的节点，即i-shard A和B。</p>
-<p>2.prepare阶段：每个ishard中的节点在收到b分片中带有集体证明的跨分片块后，可以根据身份区块链（<strong>待</strong>）中记录的公钥验证集体签名。然后，每个相关的i-shard也可以通过集体签名对区块达成共识。在成功达成共识后，i-shard向b-shard发送一个Accept消息，包括头部的散列和一个集体签名。注意，Reject消息的条件是关于块之间的冲突，这将在章节IV-D中给出。</p>
-<p>3.commit阶段：在预准备阶段之后，b-shard中的节点用其相关的i-shard的数量初始化一个计数器。当b-shard中的节点从关联的i-shard接收到有效的Accept消息时，它将减少其本地计数器并将消息广播给bshard中的其他节点。当计数器等于0时，b分片中的节点可以确保跨分片块可以在本轮提交。</p>
-<p>​    <strong>与PBFT一样，区块准备阶段不足以保证区块提交[6]，因此需要额外的集体签名来保证跨分片的区块提交，并向相关的i-shard发送包含header散列和集体签名的Commit消息。</strong>（<strong>待</strong>）</p>
-<p><strong>transactions per second (TPS)</strong></p>
-<ul>
-<li>分析： 理论2的公式（待）  理论1中的两阶段提交（分布式系统中的事务提交）</li>
-</ul>
-<p>1.集体签名：Enhancing Bitcoin Security and Performance with Strong Consistency via Collective Signing</p>
-<p>2.标识区块链： 搜一下吧 identify blockchain  </p>
-<p>3.传递机制：Monoxide: Scale Out Blockchain with Asynchronous Consensus Zones</p>
-<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205329375.png" alt="image-20230408205329375"></p>
-<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205351760.png" alt="image-20230408205351760"></p>
-<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205407633.png" alt="image-20230408205407633"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/06/Paper/Pyramid/" data-id="clg6b85h10000eou86izp873g" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-11-20/Json" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/06/11-20/Json/" class="article-date">
-  <time datetime="2023-04-06T11:17:50.147Z" itemprop="datePublished">2023-04-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/06/11-20/Json/">实体对象的序列化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li>首先验证一下 @RequestBody  注解返回的是Json元素</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/user&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping</span></span><br><span class="line">    <span class="keyword">public</span> User <span class="title function_">getUser</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUserName(<span class="string">&quot;123&quot;</span>);</span><br><span class="line">        user.setAge(<span class="number">11</span>);</span><br><span class="line">        user.setBirthday(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">6222176558369919436L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> age;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> Date birthday;</span><br><span class="line">    ....</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>最终结果为：</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    &quot;userName&quot;: &quot;123&quot;,</span><br><span class="line">    &quot;age&quot;: 11,</span><br><span class="line">    &quot;password&quot;: null,</span><br><span class="line">    &quot;birthday&quot;: &quot;2023-04-06T11:23:54.701+00:00&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我们还可以自己改变输出时间的格式，通过创造一个配置类来设置时间属性：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JacksonConfig</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> ObjectMapper <span class="title function_">getObjectMapper</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ObjectMapper</span> <span class="variable">objectMapper</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ObjectMapper</span>();</span><br><span class="line">        objectMapper.setDateFormat(<span class="keyword">new</span> <span class="title class_">SimpleDateFormat</span>(<span class="string">&quot;yyyy-MM-dd HH:mm:ss&quot;</span>));</span><br><span class="line">        <span class="keyword">return</span> objectMapper;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>可以得到结果：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;userName&quot;</span><span class="punctuation">:</span> <span class="string">&quot;123&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;age&quot;</span><span class="punctuation">:</span> <span class="number">11</span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;password&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span></span><br><span class="line">    <span class="attr">&quot;birthday&quot;</span><span class="punctuation">:</span> <span class="string">&quot;2023-04-06 19:29:43&quot;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><ul>
-<li>Jackson通过使用mapper的<code>writeValueAsString</code>方法将Java对象序列化为JSON格式字符串：</li>
-</ul>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> ObjectMapper objectMapper;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/serialization&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">serialization</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">            user.setUserName(<span class="string">&quot;Jar&quot;</span>);</span><br><span class="line">            user.setBirthday(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">            <span class="type">String</span> <span class="variable">str</span> <span class="operator">=</span> objectMapper.writeValueAsString(user);</span><br><span class="line">            <span class="keyword">return</span> str;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JsonProcessingException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<p>结果为：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;userName&quot;:&quot;Jar&quot;,&quot;age&quot;:0,&quot;password&quot;:null,&quot;birthday&quot;:&quot;2023-04-06 19:34:14&quot;&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="反序列化"><a href="#反序列化" class="headerlink" title="反序列化"></a>反序列化</h3><ul>
-<li>使用<code>@ResponseBody</code>注解可以使对象序列化为JSON格式字符串，除此之外，Jackson也提供了反序列化方法。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;/readjsonstring&quot;)</span><br><span class="line">    public String readJsonString() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            String json = &quot;&#123;\&quot;name\&quot;:\&quot;Jar\&quot;,\&quot;age\&quot;:26&#125;&quot;;</span><br><span class="line">            JsonNode node = objectMapper.readTree(json);</span><br><span class="line">            String name = node.get(&quot;name&quot;).asText();</span><br><span class="line">            int age = node.get(&quot;age&quot;).asInt();</span><br><span class="line">            return name + &quot; &quot; + age;</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>结果：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Jar 26</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<ul>
-<li><code>readTree</code>方法可以接受一个字符串或者字节数组、文件、InputStream等， 返回JsonNode作为根节点，你可以像操作XML DOM那样操作遍历JsonNode以获取数据。</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">@Autowired</span><br><span class="line">private ObjectMapper mapper;</span><br><span class="line"></span><br><span class="line">   @Test</span><br><span class="line">   void contextLoads() &#123;</span><br><span class="line">       try &#123;</span><br><span class="line">       </span><br><span class="line">           String json = &quot;&#123;\&quot;name\&quot;:\&quot;mrbird\&quot;,\&quot;hobby\&quot;:&#123;\&quot;first\&quot;:\&quot;sleep\&quot;,\&quot;second\&quot;:\&quot;eat\&quot;&#125;&#125;&quot;;;</span><br><span class="line">           JsonNode node = null;</span><br><span class="line">           node = mapper.readTree(json);</span><br><span class="line">           JsonNode hobby = node.get(&quot;hobby&quot;);</span><br><span class="line">           String first = hobby.get(&quot;first&quot;).asText();</span><br><span class="line">           System.out.println(first);    							//   结果为：sleep</span><br><span class="line">           </span><br><span class="line">       &#125; catch (JsonProcessingException e) &#123;</span><br><span class="line">           throw new RuntimeException(e);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="绑定对象"><a href="#绑定对象" class="headerlink" title="绑定对象"></a>绑定对象</h3><p>将Java实体对象与Json对象绑定</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/readjsonasobject&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">readJsonAsObject</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">json</span> <span class="operator">=</span> <span class="string">&quot;&#123;\&quot;userName\&quot;:\&quot;Jar\&quot;,\&quot;age\&quot;:26&#125;&quot;</span>;</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> objectMapper.readValue(json, User.class);</span><br><span class="line">        <span class="type">String</span> <span class="variable">name</span> <span class="operator">=</span> user.getUserName();</span><br><span class="line">        <span class="type">int</span> <span class="variable">age</span> <span class="operator">=</span> user.getAge();</span><br><span class="line">        <span class="keyword">return</span> name + <span class="string">&quot; &quot;</span> + age;      					<span class="comment">//    结果为： “Jar 26”</span></span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">    	e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="Jackson的一些注解"><a href="#Jackson的一些注解" class="headerlink" title="Jackson的一些注解"></a>Jackson的一些注解</h3><p>详情参考：<a target="_blank" rel="noopener" href="https://mrbird.cc/Spring-Boot%20JSON.html">https://mrbird.cc/Spring-Boot%20JSON.html</a></p>
-<ul>
-<li><h5 id="JsonFormat"><a href="#JsonFormat" class="headerlink" title="@JsonFormat"></a>@JsonFormat</h5></li>
-</ul>
-<p>​    用来格式化日期</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">@JsonFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;)</span><br><span class="line">private Date birthday;</span><br></pre></td></tr></table></figure>
-
-
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/06/11-20/Json/" data-id="clg69u2650002i4u8h6sk2nia" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-Paper/BlockChain" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/06/Paper/BlockChain/" class="article-date">
-  <time datetime="2023-04-06T04:11:09.744Z" itemprop="datePublished">2023-04-06</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/06/Paper/BlockChain/">区块链</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="区块链的性能问题以及扩展问题"><a href="#区块链的性能问题以及扩展问题" class="headerlink" title="区块链的性能问题以及扩展问题"></a>区块链的性能问题以及扩展问题</h1><h5 id="交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。"><a href="#交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。" class="headerlink" title="交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。"></a>交易吞吐量和交易速度限制了比特币、以太坊等区块链平台的交易数量，扩容是目前区块链需要解决的一大问题。</h5><p>三种层次的方案图：</p>
-<p><img src="https://pic.imgdb.cn/item/642e6cbba682492fccbc1e3a.png" alt="image-20230406145419098"></p>
-<ul>
-<li><p>链上扩展(扩容方案)</p>
-<ul>
-<li><p>一次生成多个区块</p>
-<p>例如：Bitcoin-NG:</p>
-<blockquote>
-<p>​    使用了PoW工作量证明共识协议来选择领导者，领导者可以写入一个主块和多个微块，主块中不包含任何交易信息，只负责记录领导者的选举过程和结果，交易信息记录在微块中。</p>
-<p>​    在每个领导者被选举出来后，该领导者在一段时间内负责所有交易信息的验证和打包工作，即生成微块，此过程不涉及PoW共识机制，因此记账速度得到提升，区块链系统的交易吞吐量也随之提升。</p>
-</blockquote>
-</li>
-<li><p>混合共识协议</p>
-<p>例如：Algorand：</p>
-<blockquote>
-<p>Algorand将PoW/PoS共识思想用于委员会创建，拜占庭思想用于委员会内部达成共识。</p>
-</blockquote>
-</li>
-<li><p>分片</p>
-<blockquote>
-<p>​    通过改变网络内部各步骤之间的验证方式来提高区块链可扩展性的一种方法.</p>
-<p>​    其核心思想是“化整为零”，将区块链网络划分成若干能够处理交易的较小组件式网络，以实现每秒处理数千笔交易的支付系统。</p>
-<p>​    <em><u><strong>分片机制需要面临的挑战是1%攻击, 即保证攻击者在分片过程中无法在任何一个分片中实现51%攻击, 以及如何保证攻击者无法在分片处理交易的过程中, 实现双花攻击.   以及 如何快速处理跨碎片事务，同时确保这些事务的一致性。</strong></u></em></p>
-</blockquote>
-<ul>
-<li><p>网络分片</p>
-<blockquote>
-<p>网络分片是随机选择节点形成分片，分片内利用共识协议达成一致</p>
-</blockquote>
-</li>
-<li><p>交易分片</p>
-<blockquote>
-<p>交易分片是根据交易地址分片，便于在分片内检测双花</p>
-</blockquote>
-</li>
-<li><p>状态分片</p>
-<blockquote>
-<p>状态分片指的是划分存储区，每个分区只储存分片数据，而不是存储完整的区块链状态</p>
-<p><em><strong>如何确保跨分片通信成本不会超过状态分片的所获的的性能增益仍然是一个值得深入研究的问题</strong></em></p>
-</blockquote>
-</li>
-</ul>
-<p><u>在网络和交易分片中，每个节点存储着系统的全部状态，所以各个分片之间不需要频繁的交流去确认其他分片的状态。</u></p>
-<p><u>状态分片，显然最大的优势是他解决的日益庞大的存储问题。</u></p>
-<p>关于分片的参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/gaohaoyang0123/article/details/96743105">https://blog.csdn.net/gaohaoyang0123/article/details/96743105</a></p>
-<hr>
-<p>​    Elastico的方案基于UTXO模型, 因此在交易处理时, 通过<strong>交易的输入作为基准映射</strong>到不同的分片处理.在UTXO模型中, 攻击者想要实现双花必须产生2笔<strong>引用同一输出</strong>（作为输入）的交易.</p>
-<p>​    Zilliqa的方案基于账户模型, 因此在交易处理时, 通过<strong>发送者的身份作为基准</strong>映射到不同的分片中.一轮共识过程中, 不同发送者的交易可能映射到不同的分片 (不同验证者) ,但<strong>同一发送者的交易都会由同一分片处理</strong>, 因此分片内的诚实节点对特定发送者的状态是确定的.因此其能够在基于账户的模型下抵御双花攻击.</p>
-<hr>
-</li>
-<li></li>
-<li><p>有向无环图结构</p>
-<blockquote>
-<p>有向无环图结构是一种非线性数据结构，将其应用到区块链中，从拓扑结构角度改变了区块的单向链接形式，支持并发上链，平行验证。    </p>
-</blockquote>
-</li>
-</ul>
-</li>
-<li><p>链下扩展(扩容)</p>
-<ul>
-<li><p>状态通道（子链）</p>
-<blockquote>
-<p>​    最早的状态通道是闪电网络。</p>
-<p>​    双方节点直接建立的点对点渠道，双方可以在通道内快速地进行交易并保证状态可以随时被公开，通道关闭时，最终状态会传回到链上。</p>
-<p>​    通道内的交易转账的安全性主要依靠数字签名、合约锁定等技术保障。</p>
-</blockquote>
-</li>
-<li><p>链下计算链上验证</p>
-<blockquote>
-<p>链下外包执行机制。用户上传代码任务并提供少量佣金，链外外包用户代理执行并提供足够执行链上合约数量的保证金，其他链上节点充当验证者的角色监督代码执行的正确性。</p>
-</blockquote>
-</li>
-</ul>
-</li>
-</ul>
-<h1 id="分片"><a href="#分片" class="headerlink" title="分片"></a>分片</h1><hr>
-<ul>
-<li><p><strong>存在的问题</strong>：整个分片机制在运行过程中有大量时间用于处理交易以外的工作，同时，为了防止节点作恶，不少分片技术需要大量时间和开销进行分片重配置</p>
-<ul>
-<li>小规模的分片意味对双花攻击防御能力的下降，安全性更高的片内共识协议也将付出更高的共识代价，大多数协议对于安全性的分析集中在<strong>拜占庭对手规模、信息可靠性以及分片随机性方面</strong></li>
-</ul>
-</li>
-<li><p>分片除了上面说到的 还有一些解决方案提出了一种新的结构，由主链和多个分片链组成。（如下图）</p>
-<p><img src="https://pic.imgdb.cn/item/642e6ad9a682492fccb9b38e.png"></p>
-<p>每个分片维护一个分片链，并定期将其状态提交到主链。从上图 所示的架构中，我们可以看到每个分片都有一个专用的链。在这种架构下，跨分片事务通过主链处理，允许接收不同分片提交的跨分片事务，可以通过所有分片进行验证，以确保跨分片事务的正确性。然而，当跨分片事务的规模在区块链系统中增加时，主链将成为整体系统的瓶颈，因为大量的事务给存储和通信带来了很大的压力。</p>
-</li>
-</ul>
-<h1 id="有关的知识点"><a href="#有关的知识点" class="headerlink" title="有关的知识点"></a>有关的知识点</h1><ul>
-<li>1.环签名</li>
-</ul>
-<blockquote>
-<p>环签名具有无条件匿名性，攻击者即使非法获取了所有可能签名者的私钥，也无法确定签名是由环中哪个成员生成的，实现了签名人身份的隐藏。同时具有不可伪造性，攻击者在不知道任何成员私钥的情况下，无法成功伪造一个合法的签名。</p>
-<p>流程：</p>
-<p>​    (1)密钥生成，为环中的成员产生（PKi,SKi）密钥对；</p>
-<p>​    (2)签名，签名者用自己的私钥x和任意n个环成员的公钥为消息m生成签名；</p>
-<p>​    (3)签名验证，验证者根据签名和消息m，验证签名是否为环中成员所签，如果有效就接收，否则丢弃。</p>
-</blockquote>
-<ul>
-<li>2.零知识证明</li>
-</ul>
-<blockquote>
-<p>​    证明者能够在不向验证者提供任何有用的信息的情况下，使验证者相信某个论断是正确的。</p>
-</blockquote>
-<ul>
-<li>3.安全多方计算</li>
-</ul>
-<blockquote>
-<p>在各方不可信的情况下，不泄露输入数据来安全地进行多方协同的计算</p>
-</blockquote>
-<hr>
-<hr>
-<h1 id="共识协议"><a href="#共识协议" class="headerlink" title="共识协议"></a>共识协议</h1><ul>
-<li><p><strong>分布式系统面临的一致性问题：拜占庭将军问题；</strong></p>
-</li>
-<li><p><strong>共识算法的核心就是解决拜占庭将军问题。</strong></p>
-</li>
-<li><p><strong>共识机制就是用来解决分布式系统的一致性问题,其核心为在某个协议(共识算法)保障下,在有限的时间内,使得指定操作在分布式网络中是一致的、被承认的、不可篡改的。</strong></p>
-</li>
-</ul>
-<p>​    在中心化的分布式系统   兰伯特提出了Paxos算法。</p>
-<p>​    在去中心化的分布式系统（区块链），1999年PBFT算法（Practical Byzantine Fault Tolerance, 实用的拜占庭容错算法）。</p>
-<blockquote>
-<p>1.叛徒等于或大于三分之一，拜占庭问题无解；<br>2.当叛徒数量不到三分之一，那么忠诚将军就至少有三分之二，此时拜占庭问题有解，仍然可以达到容错。</p>
-</blockquote>
-<p>​    在比特币中采用了POW的基于工作量证明的共识机制。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a.POW工作量证明机制提高了做叛徒（发布虚假区块）的成本，在工作量证明下，只有第一个完成证明的节点才能广播区块，竞争难度非常大，需要很高算例，如果不成功其算力就白白的耗费了（算力是需要成本的），如果有这样的算力作为诚实的节点，可以获得很大的收益（这就是矿工所作的工作），这也实际就不会有做叛徒的动机，整个系统也因此而更稳定。</span><br><span class="line">b.对于51%攻击问题，那更是提高了做叛徒的成本。拥有这么大的算力的，自然就是希望依赖比特币系统而盈利的，当然更不会造假而损坏自身利益。</span><br><span class="line">c.当然很多人批评POW工作量证明机制造成巨大的电力浪费，促使人们去探索新的解决一致性（共识）问题的机制：权益证明机制（POS : proof  of  Stake）是一个代表。在拜占庭将军问题的角度来看，它同样提高了做叛徒的成本，因为账户需要首先持有大量余额才能有更多的几率广播区块。如果已经拥有这么大的利益，当然更不会造假而损坏自身利益了。</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<hr>
-<h2 id="思想算法"><a href="#思想算法" class="headerlink" title="思想算法"></a>思想算法</h2><ul>
-<li><p>隔离见证技术（待补充）</p>
-</li>
-<li><h3 id="Bitcoin-NG-A-Scalable-Blockchain-Protocol"><a href="#Bitcoin-NG-A-Scalable-Blockchain-Protocol" class="headerlink" title="Bitcoin-NG: A Scalable Blockchain Protocol"></a>Bitcoin-NG: A Scalable Blockchain Protocol</h3></li>
-</ul>
-<p><strong>注意的是，比特币使用PoW的作用是选出具有打包资格的leader</strong>。我们发现，比特币的leader选举和区块的打包是一起完成的。每一次选举一个leader的同时才打包一次。我们思考，如果将这两个过程分开，让两者以不同的速率工作，比如10分钟一次leader选举，但每30秒打包一次，并且这期间所有的区块都由这个leader打包，这样是不是就可以提高系统的吞吐量了？这便是Bitcoin-NG的总体思路。</p>
-<ul>
-<li><h3 id="去中心化证人共同签名，让认证者诚信或被发现"><a href="#去中心化证人共同签名，让认证者诚信或被发现" class="headerlink" title="去中心化证人共同签名，让认证者诚信或被发现"></a>去中心化证人共同签名，让认证者诚信或被发现</h3></li>
-</ul>
-<p>leader在认证和签名每一个消息S（S也可以是一个命题）之前，都需要witness检查并签名一下，leader收集这些witness的签名，统一发给认证请求者。请求者通过认证各个witness的签名来确认结果的有效性。这里，“witness是否确定S是正确的”这个不重要，因为如果S是不正确的，那么意味着S同时也是黑客攻击行为已经被公之于众。</p>
-<ul>
-<li>CoSi集体签名</li>
-</ul>
-<p>每个见证者只是确保了消息的有效性，并不能确保消息的合法性、正确性（当然如果消息是不合法的就说明该网络已被黑客攻破）.</p>
-<p>将网络内部节点构造成一个K叉树，leader为树根,然后进行消息S的见证、签名加密和最终确认。</p>
-<p><img src="https://pic2.zhimg.com/80/v2-97b30e1a5d8ebdeccd34d98d97680b55_1440w.webp" alt="img"></p>
-<ul>
-<li><h3 id="Byzcoin，通过集体签名让比特币具有强一致性且强化安全"><a href="#Byzcoin，通过集体签名让比特币具有强一致性且强化安全" class="headerlink" title="Byzcoin，通过集体签名让比特币具有强一致性且强化安全"></a>Byzcoin，通过集体签名让比特币具有强一致性且强化安全</h3></li>
-</ul>
-<p>有一个PBFT网络，所有的交易都由这些节点认证和打包，然后追加到blockchain中。在每个epoch内部解决了Pow迷题的节点才可以加入PBFT网络，然后对交易进行打包认证。</p>
-<p>任何人都可以通过PoW方式挖矿，挖到矿之后，该矿工称为共识组成员，时间窗口往前移一个区块，意味着可能会有另一个矿工退出PBFT共识组。在一个时间窗口内，可能存在一个矿工多次成功挖矿的情况，这时候它就拿到多个share。每一次成功挖矿，所获得的奖励按照共识组内部矿工所持有的share的比例来分配。最新挖矿成功的矿工作为共识组的leader。</p>
-<p>PBFT的通信复杂为O( n2 )，认证的时间复杂度为O(n), 我们可以使用非对称加密算法签名的方式让通信时间复杂度由O( n2 )下降为O(n),进一步地，我们可以使用集体签名cosi协议让通信和认证过程的复杂度下降到O(1).</p>
-<blockquote>
-<p>ByzCoinX，所谓是byzcoin的改善版本，两者的区别是，前者是一个三层的树，第一层也就是leader，第二层是一个片的group中的一个组长，第三层就是该片的其它成员。后者是一个层数为log（k）的树，可以是二叉树。</p>
-</blockquote>
-<ul>
-<li>Omniledger</li>
-</ul>
-<p>客户端驱动跨分片交易机制：交易有客户端发起，相当于客户端管理整个交易个流程。客户端需要首相确认交易的有效性，向全网广播交易，相应委员会进行验证并返回相应，收到相应之后客户端才能提交。</p>
-<ul>
-<li>Rapidchain</li>
-</ul>
-<p>他们只需要把交易发送到任意委员会，然后交易会通过委员会间路由协议（inter-committee routing protocol）被路由到输出委员会。</p>
-<p>假设有一笔交易tx，这笔交易存在两个输入In1和In2和一个输出Out，且这两个输入和输出分别属于不同的分片委员会Shard1，2，3。那么<strong>输出委员会的Leader会创建三笔新的交易</strong>，分别如下：</p>
-<p>  ① Tx1把来自Shard1的Input转化成Shard3的Output。（相当于把Shard1里面的相应的钱转移到Shard3中）<br>  ② Tx2把来自Shard2的Input转化成Shard3的Output。（相当于把Shard2里面的相应的钱转移到Shard3中）<br>  ③ 通过以上两笔交易，现在所有的Input和Output都属于同一个分片了，接下来就创建一个交易Tx3，输入是Tx1和Tx2的输出，输出同原交易相同。</p>
-<p>输出委员会的Leader会通过委员会间路由协议把Tx1和Tx2分别发送给Shard1和Shard2。然后Shard1和Shard2的Leader会分别验证相应交易的有效性，如果有效，他们会分别把交易加入到本分片的账本中，并向Shard3做出回复。Shard3收到了所有输入委员会的回复后会把Tx3加入到自己的账本中。</p>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/gaohaoyang0123/article/details/100158973">https://blog.csdn.net/gaohaoyang0123/article/details/100158973</a></p>
-<ul>
-<li>XBlock:<em>XBlock(xblock.pro)是一个旨在助力区块链良性发展和数据研究的数据集共享平台</em>。</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/06/Paper/BlockChain/" data-id="clg69u26b0005i4u8af490h5u" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-1-10/cache" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/05/1-10/cache/" class="article-date">
-  <time datetime="2023-04-05T14:55:12.059Z" itemprop="datePublished">2023-04-05</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/05/1-10/cache/">使用缓存</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><p>springboot  开启缓存：</p>
-<ul>
-<li>引入依赖：</li>
-</ul>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-cache<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>开启缓存功能<code>@EnableCaching</code></li>
-</ul>
-<ul>
-<li>下载Redis : <a target="_blank" rel="noopener" href="https://github.com/MicrosoftArchive/redis/releases">https://github.com/MicrosoftArchive/redis/releases</a></li>
-<li>引入Redis依赖</li>
-</ul>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/05/1-10/cache/" data-id="clg69u26d000bi4u8h4847lif" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
     
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
   </nav>
 
 </section>
@@ -1022,23 +743,23 @@
       <ul>
         
           <li>
-            <a href="/2023/04/09/11-20/error/">异常处理</a>
+            <a href="/2023/04/14/JAVA/Springboot_Vue/mp%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E5%99%A8/">Springboot+Vue Blog</a>
           </li>
         
           <li>
-            <a href="/2023/04/09/11-20/logback/">日志配置（logback）</a>
+            <a href="/2023/04/14/11-20/swagger/">Swagger监控程序</a>
           </li>
         
           <li>
-            <a href="/2023/04/09/JAVA/JUC_3/">并发第四章</a>
+            <a href="/2023/04/13/11-20/devtool/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2023/04/08/JAVA/JUC_2/">初级并发2</a>
+            <a href="/2023/04/13/project1/">(no title)</a>
           </li>
         
           <li>
-            <a href="/2023/04/08/11-20/mail/">使用SpringBoot发邮件</a>
+            <a href="/2023/04/13/11-20/filterandIntercepter/">Filter(过滤器)和Interceptor（拦截器）</a>
           </li>
         
       </ul>
