@@ -64,6 +64,156 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Paper/Pyramid" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2023/04/06/Paper/Pyramid/" class="article-date">
+  <time datetime="2023-04-06T13:56:48.966Z" itemprop="datePublished">2023-04-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2023/04/06/Paper/Pyramid/">“分层分片区块链系统--金字塔 Pyramid：A Layered Sharding Blockchain System”</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>​    在本文中，我们提出了金字塔，第一层分片区块链系统。</p>
+<p>​    其中一些分片可以存储多个分片的完整记录，从而可以在这些分片内部处理和验证跨分片交易。在提交跨分片事务时，为了实现相关分片之间的一致性，提出了基于多个分片之间协作的分层分片共识。</p>
+<p>​    相比于完整分片，每个跨分片事务被分割成多个子事务，需要多轮共识提交，分层分片共识可以在一轮提交跨分片事务。</p>
+<p>分片的主要思想:    主要思想是将节点划分为称为碎片的小组，可以并行处理事务。</p>
+<p><img src="https://pic.imgdb.cn/item/642ed570a682492fcc4a0356.png" alt="5b322fe30b697758fe5f0685d88c4264_0_Figure_1_1546720846"></p>
+<p>如上图所示，本文将b部分的完全分叉，变成了c部分的不完全分叉，存在交叉重合的部分（这些重合节点包含两个分片的所有信息）。</p>
+<p>本文挑战：</p>
+<ul>
+<li>第一个挑战是关于共识协议设计，它指定了如何生成块以及如何验证块。现有的分片系统在每个分片中采用工作量证明(PoW)或基于拜占庭的区块提议方案。由于完全共享，分片可以独立地验证它们的块。然而，金字塔中的一些分片负责生成跨分片交易的区块。生成的块需要发送到相应的分片进行承诺，这使得共识协议设计更具挑战性。</li>
+<li>第二个挑战是关于分片的构建，即需要多少个分片，哪些节点应该分配给哪些分片。不同于传统的分片方案，所有的分片都有相同的角色，金字塔中的分片扮演不同的角色。一些分片负责内部事务，而另一些则应该处理跨分片事务。对于金字塔系统，分片分配的研究至关重要，它决定了系统的吞吐量和安全水平。</li>
+</ul>
+<p>本文贡献：</p>
+<ul>
+<li>分层分片架构:我们介绍了分层分片的形成过程。通过我们的跨分片区块设计，跨分片交易可以被包含在一个区块中，以达成共识。</li>
+<li>分层分片共识:我们提出了一种分层分片共识协议，根据不同分片中节点之间的协作，在每个分片中提交跨分片块。与将跨分片事务拆分为多个子事务并在多个共识轮中处理的完整分片相比，我们的分层分片共识可以在一轮中提交每个跨分片事务，从而提高了分片性能。</li>
+<li>理论分析:从安全性、可扩展性、性能等方面对不同分片结构的Pyramid进行了理论分析，并将其与考虑多步事务分布的非分片和完整分片系统进行了比较。</li>
+<li>系统实施:我们为金字塔开发了一个原型，并通过将其与两个最先进的完整分片系统进行比较来评估其性能。结果表明，在一个有17个分片、3500个节点的系统中，金字塔分片与完全分片相比，事务吞吐量提高了2.95倍。</li>
+</ul>
+<p>区块链分片的发展：</p>
+<ul>
+<li><p>不分片时期：</p>
+<blockquote>
+<p>而非分片系统的共识涉及到系统中的所有节点，这意味着每个节点都需要验证和存储系统中发生的所有事务，每个共识消息都需要在全网广播。这导致非分片系统的可伸缩性较差。</p>
+</blockquote>
+</li>
+<li><p>部分分片系统：</p>
+</li>
+</ul>
+<blockquote>
+<p>ELASTICO实现了事务计算的分片，但它没有实现系统中存储和通信的分片，因此ELASTICO被称为部分分片系统。由于每个节点接收和存储系统的完整信息，系统中不存在跨分片的事务，但节点仍有较大的存储和带宽开销。</p>
+</blockquote>
+<ul>
+<li>完全分片</li>
+</ul>
+<blockquote>
+<p>omniedger[8]是第一个基于分片实现全分片的区块链系统。系统采用客户端驱动机制提交跨分片事务。然后，提出了另一个客户端驱动的分片系统Chainspace[11]，以支持通用智能合约的分片</p>
+</blockquote>
+<h4 id="系统和威胁模型"><a href="#系统和威胁模型" class="headerlink" title="系统和威胁模型"></a>系统和威胁模型</h4><ul>
+<li><p>系统模型</p>
+<p>系统有N个节点和S个分片，shard可分成两种类型：i-shard 和 b-shard。</p>
+<p>i-shard: 与完整分片方案中的shard一致，只处理本分片内部的交易。</p>
+<p>b-shard：它也可以处理分片内部的交易，同时他也承担了跨分片交易的处理。这种类型的节点通过处理与i-shard相关的跨shard事务来桥接多个i-shard的节点。</p>
+<p>本文的Pyramid模型采用了账户/余额的形式。</p>
+</li>
+<li><p>威胁模型</p>
+</li>
+</ul>
+<p>​        金字塔（Pyramid）中包含诚实节点和恶意节点。这里假设拜占庭对手是缓慢自适应的，恶意节点和诚实结点的集合在每个时代（epoch）都是固定的，只能在时代之间改变。</p>
+<h4 id="系统设计"><a href="#系统设计" class="headerlink" title="系统设计"></a>系统设计</h4><ul>
+<li><p>分层分片形成</p>
+<ul>
+<li><p>随机生成</p>
+<blockquote>
+<p>在每个epoch的开始都需要生成一个随机性（<strong>待</strong>）</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>节点加入epoch </p>
+<blockquote>
+<p>​      首先节点要根据epoch的随机性来解决一个pow谜题。 解决之后再将谜题的解记录到 标识区块链（<strong>待</strong>）中，注册其标识。</p>
+<p>​      PoW谜题在每个epoch的难度可以根据上一个epoch的身份数量进行调整，以保持节点数量的稳定。如果上一纪元的nidentity多于上一纪元的，那么这一纪元的难度就会增加，否则难度就会降低。</p>
+</blockquote>
+</li>
+<li><p>Assignment（任务）</p>
+</li>
+</ul>
+<blockquote>
+<p>每个被接纳的节点根据节点的身份和纪元中生成的随机性随机分配一个分片ID。shard ID分为i-shard ID和b-shard ID两种，每个b-shard ID对应若干个i-shard ID。</p>
+</blockquote>
+<ul>
+<li><p>跨分片区块设计</p>
+<ul>
+<li><p>有效性验证</p>
+<blockquote>
+<p>​    每个交易的有效性可以分为源有效性和结果有效性。</p>
+<p>​    源有效性表示发送方的状态满足交易的条件，即发送方有足够的资金;结果有效性表示接收方的状态符合交易的运行结果，即接收方收到了适当的资金。只有具有上述两种有效性的事务才被认为是有效的。</p>
+<p>​    完整分片处理跨分片事务，需要分成3个子事务，2个内部事务和1个中继事务。</p>
+</blockquote>
+</li>
+<li><p>区块设计</p>
+<blockquote>
+<p>​    每个分片（shard）都有自己的区块链。同时每个i-shard都会存一个区块链，而b-shard节点除了存储自己的区块链之外还会存储所有与其桥接的i-shard的区块链。</p>
+</blockquote>
+<p> 组成：每个跨分片的区块，都由块头和块体组成，如下图</p>
+<p><img src="https://pic.imgdb.cn/item/642f8b6fa682492fccf8cf36.png" alt="image-20230407111739685"></p>
+<p>​                header包括了与跨片交易相关的i-shard中的父块的散列以及body的Merkle树根。</p>
+<p>​                body部分包括涉及到的分片交易，以及个分片中节点对应的账户状态。 </p>
+</li>
+<li><p>分层分片共识</p>
+<p>每个epoch都要进行多轮共识，每轮共识都会根据epoch的随机性选择一个领导者。  </p>
+<p>​    i-shard中的领导者 以提出一个包含其内部交易的区块，相应的共识过程类似于传统的完整分片系统（<strong>待</strong>）</p>
+<p>​    b-shard的领导者可以提出一个包含其内部事务的块或与多个ishard关联的跨分片块。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>​    <img src="https://pic.imgdb.cn/item/642f8ffca682492fccfe5bef.png"></p>
+<p>上图展示了共识的过程：</p>
+<p>​    1、pre-prepare阶段：b分片中的节点通过BFT协议实现跨分片块的共识，使用集体签名协议CoSi，该协议可以生成由分散的节点组共同签署的多重签名。具有三分之二超多数节点的集体签名的交叉分片块证明b分片在拜占庭环境下同意它。</p>
+<p>​    跨分片块还不能提交，因为相关i-shard中的节点不知道该块，也没有根据跨分片事务更新其本地状态。这样，具有B分片集体证明的跨分片块将被发送到关联i-shard的节点，即i-shard A和B。</p>
+<p>2.prepare阶段：每个ishard中的节点在收到b分片中带有集体证明的跨分片块后，可以根据身份区块链（<strong>待</strong>）中记录的公钥验证集体签名。然后，每个相关的i-shard也可以通过集体签名对区块达成共识。在成功达成共识后，i-shard向b-shard发送一个Accept消息，包括头部的散列和一个集体签名。注意，Reject消息的条件是关于块之间的冲突，这将在章节IV-D中给出。</p>
+<p>3.commit阶段：在预准备阶段之后，b-shard中的节点用其相关的i-shard的数量初始化一个计数器。当b-shard中的节点从关联的i-shard接收到有效的Accept消息时，它将减少其本地计数器并将消息广播给bshard中的其他节点。当计数器等于0时，b分片中的节点可以确保跨分片块可以在本轮提交。</p>
+<p>​    <strong>与PBFT一样，区块准备阶段不足以保证区块提交[6]，因此需要额外的集体签名来保证跨分片的区块提交，并向相关的i-shard发送包含header散列和集体签名的Commit消息。</strong>（<strong>待</strong>）</p>
+<p><strong>transactions per second (TPS)</strong></p>
+<ul>
+<li>分析： 理论2的公式（待）  理论1中的两阶段提交（分布式系统中的事务提交）</li>
+</ul>
+<p>1.集体签名：Enhancing Bitcoin Security and Performance with Strong Consistency via Collective Signing</p>
+<p>2.标识区块链： 搜一下吧 identify blockchain  </p>
+<p>3.传递机制：Monoxide: Scale Out Blockchain with Asynchronous Consensus Zones</p>
+<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205329375.png" alt="image-20230408205329375"></p>
+<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205351760.png" alt="image-20230408205351760"></p>
+<p><img src="C:\Users\JarNinLee\AppData\Roaming\Typora\typora-user-images\image-20230408205407633.png" alt="image-20230408205407633"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/04/06/Paper/Pyramid/" data-id="clggal31w000k6gu8bxdweg7i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-11-20/Json" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2023/04/06/11-20/Json/" class="article-date">
@@ -913,79 +1063,6 @@ public void foundPropertyNamer() &#123;
 
 
   
-    <article id="post-1-10/second" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2023/04/03/1-10/second/" class="article-date">
-  <time datetime="2023-04-03T05:19:05.404Z" itemprop="datePublished">2023-04-03</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/04/03/1-10/second/">SecondDay</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <ul>
-<li><p>多环境配置Profile </p>
-<p>Profile用来针对不同的环境下使用不同的配置文件，多环境配置文件必须以<code>application-&#123;profile&#125;.properties</code>的格式命，其中<code>&#123;profile&#125;</code>为环境标识。比如定义两个配置文件：</p>
-<ul>
-<li>application-dev.yml:开发环境</li>
-</ul>
-<hr>
-<p>server:</p>
-<p>​    port: 8080</p>
-<hr>
-<ul>
-<li>application-pord.yml:生产环境</li>
-</ul>
-<hr>
-<p>server:</p>
-<p>​    port: 8081</p>
-<hr>
-</li>
-</ul>
-<p>需要切换时就可以直接在<code>application.yml</code>中使用:</p>
-<hr>
-<p>spring:</p>
-<p>​    profiles:</p>
-<p>​            active: dev/prod</p>
-<hr>
-<p>进行切换</p>
-<ul>
-<li>在不得不使用xml配置文件的时候：<ul>
-<li>在入口类里通过注解<code>@ImportResource(&#123;&quot;classpath:some-application.xml&quot;&#125;)</code>来引入xml配置文件。</li>
-</ul>
-</li>
-</ul>
-<h2 id="使用Druid连接池"><a href="#使用Druid连接池" class="headerlink" title="使用Druid连接池"></a>使用Druid连接池</h2><p>​    </p>
-<ul>
-<li>这里出现了问题，当我们没有引入<code>spring-boot-starter-web</code>的时候是不会一直处于启动状态的</li>
-<li>当我们引入了Mybatis  或者  Druid的时候必须要进行数据库的设置，否则会报错</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/04/03/1-10/second/" data-id="clggal31t000d6gu80d6s8ds0" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
 
 
   <nav id="page-nav">
@@ -1022,6 +1099,10 @@ public void foundPropertyNamer() &#123;
       <ul>
         
           <li>
+            <a href="/2023/04/15/11-20/%E8%B7%A8%E5%9F%9F/">跨域</a>
+          </li>
+        
+          <li>
             <a href="/2023/04/14/JAVA/JavaNote/Web/">HTML、CSS、HTTP、Servlet、JavaScript</a>
           </li>
         
@@ -1035,10 +1116,6 @@ public void foundPropertyNamer() &#123;
         
           <li>
             <a href="/2023/04/14/JAVA/JavaNote/README/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2023/04/14/JAVA/JavaNote/Prog/">Concurrent、Network Programming</a>
           </li>
         
       </ul>
